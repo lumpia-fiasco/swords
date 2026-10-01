@@ -195,6 +195,21 @@ export const TOPICS = [
     ],
   },
   {
+    id: 'courts',
+    title: 'The Courts of Heaven',
+    keywords: ['courts of heaven', 'court of heaven', 'courts', 'court', 'courtroom', 'heavenly court', 'judge', 'accuser', 'advocate', 'verdict', 'books opened', 'legal'],
+    blurb: 'The Ancient of Days takes His seat and the books are opened. The accuser brings charges, but we have an Advocate whose blood speaks a better word.',
+    sections: [
+      { heading: 'The court is seated', refs: ['Dan.7.9-10', 'Dan.7.13-14', 'Dan.7.21-22', 'Dan.7.26-27', 'Ps.82.1', 'Rev.4.2-5'] },
+      { heading: 'The righteous Judge', refs: ['Gen.18.25', 'Ps.7.11', 'Ps.9.7-8', 'Ps.89.14', 'Heb.12.22-24', 'Jas.4.12'] },
+      { heading: 'The accuser', refs: ['Job.1.6-12', 'Zech.3.1-5', 'Rev.12.10', '1Pet.5.8', 'Luke.22.31-32'] },
+      { heading: 'Our Advocate', refs: ['1John.2.1-2', 'Rom.8.33-34', 'Heb.7.25', 'Heb.9.24', 'Isa.53.12', 'Job.16.19-21'] },
+      { heading: 'Present your case', refs: ['Isa.43.26', 'Isa.1.18', 'Isa.41.21', 'Job.23.3-7', 'Luke.18.1-8', 'Heb.4.16'] },
+      { heading: 'The books are opened', refs: ['Dan.7.10', 'Ps.139.16', 'Mal.3.16', 'Rev.20.12', 'Rev.5.1-5'] },
+      { heading: 'The verdict: no condemnation', refs: ['Rom.8.1', 'Col.2.13-15', 'Isa.54.17', 'Rev.12.11', 'Heb.10.19-22', 'Mic.7.9'] },
+    ],
+  },
+  {
     id: 'name-blood',
     title: 'The Name & the Blood',
     keywords: ['name of jesus', 'blood', 'name', 'blood of jesus', 'atonement', 'covering', 'plead the blood'],
@@ -245,13 +260,28 @@ export const TOPICS = [
   {
     id: 'anointing',
     title: 'Anointing & Calling',
-    keywords: ['anointing', 'anointed', 'calling', 'called', 'purpose', 'destiny', 'commission', 'great commission'],
+    keywords: ['anointing', 'anointed', 'calling', 'called', 'commission', 'great commission', 'mantle'],
     blurb: 'Anointed and sent.',
     sections: [
       { heading: 'The Spirit of the Lord is upon me', refs: ['Isa.61.1-3', 'Luke.4.18-19', 'Acts.10.38', '1Sam.16.13'] },
       { heading: 'You have an anointing', refs: ['1John.2.20', '1John.2.27', '2Cor.1.21-22', 'Isa.10.27'] },
       { heading: 'Called with purpose', refs: ['Jer.1.5', 'Eph.2.10', 'Eph.4.1', '2Tim.1.9', 'Rom.11.29', '1Pet.2.9'] },
       { heading: 'Sent out', refs: ['Matt.28.18-20', 'Mark.16.15-18', 'John.20.21-22', 'Acts.1.8', 'Isa.6.8'] },
+    ],
+  },
+  {
+    id: 'destinies',
+    title: 'Destinies',
+    keywords: ['destiny', 'destinies', 'purpose', 'plans', 'future', 'predestined', 'calling', 'assignment', 'such a time as this', 'prophetic destiny'],
+    blurb: 'Known before you were born, every day written in His book, created for good works He prepared in advance.',
+    sections: [
+      { heading: 'Known before you were born', refs: ['Jer.1.5', 'Ps.139.13-15', 'Isa.49.1', 'Gal.1.15', 'Eph.1.4-5', 'Rom.8.29-30'] },
+      { heading: 'Your days are written', refs: ['Ps.139.16', 'Ps.31.15', 'Job.14.5', 'Luke.10.20', 'Rev.3.5'] },
+      { heading: 'His plans stand firm', refs: ['Jer.29.11', 'Prov.19.21', 'Prov.16.9', 'Ps.33.11', 'Isa.46.10', 'Ps.138.8'] },
+      { heading: 'Created for good works', refs: ['Eph.2.10', '2Tim.1.9', 'Phil.1.6', 'Phil.2.13', 'Rom.8.28'] },
+      { heading: 'For such a time as this', refs: ['Esth.4.14', 'Gen.50.20', 'Gen.45.7-8', 'Judg.6.12-14', 'Acts.13.36'] },
+      { heading: 'Write the vision, run the race', refs: ['Hab.2.2-3', 'Phil.3.12-14', '1Cor.9.24', 'Heb.12.1-2', 'Acts.20.24', '2Tim.4.7-8'] },
+      { heading: 'Your eternal destiny', refs: ['John.14.2-3', '1Cor.2.9', 'Rom.8.17-18', 'Col.3.4', 'Dan.12.3', 'Rev.22.3-5'] },
     ],
   },
   {
