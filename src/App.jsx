@@ -6,7 +6,8 @@ import Sidebar from './components/Sidebar.jsx'
 import Reader from './components/Reader.jsx'
 import NamePanel from './components/NamePanel.jsx'
 
-const DEFAULT = { book: 'John', chapter: 3, verse: 16 }
+// With no verse in the URL, open on a chapter (no verse selected) and the topic list.
+const DEFAULT = { book: 'John', chapter: 3 }
 
 function readHash() {
   const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''))
@@ -24,7 +25,8 @@ export default function App() {
   // The verse whose cross-references the sidebar shows.
   const [selected, setSelected] = useState(() => (focus.verse ? { book: focus.book, chapter: focus.chapter, verse: focus.verse } : null))
   // A link to a specific verse opens straight to its cross-references.
-  const [panel, setPanel] = useState({ tab: focus.verse ? 'xref' : 'topics', topicId: 'promises', query: '' })
+  // The topic list by default; a verse in the URL opens straight to its cross-references.
+  const [panel, setPanel] = useState({ tab: focus.verse ? 'xref' : 'topics', topicId: null, query: '' })
   const [drawerOpen, setDrawerOpen] = useState(false)
   // Name tapped in the reader: { ids, nt } shown in the right panel.
   const [nameView, setNameView] = useState(null)
@@ -88,6 +90,7 @@ export default function App() {
         onOpenTopic={(id) => { setPanel({ tab: 'topics', topicId: id, query: '' }); setDrawerOpen(true) }}
         onNavigate={(ref) => open(ref, { showRefs: false })}
         onToggleDrawer={() => setDrawerOpen((o) => !o)}
+        onHome={() => { setSelected(null); setPanel({ tab: 'topics', topicId: null, query: '' }) }}
       />
       <Sidebar
         panel={panel}

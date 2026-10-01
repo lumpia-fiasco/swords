@@ -3,7 +3,7 @@ import { BOOKS, bookById } from '../books.js'
 import { parseTyped, label } from '../ref.js'
 import { matchTopics } from '../topics.js'
 
-export default function TopBar({ focus, onLookup, onOpenTopic, onNavigate, onToggleDrawer }) {
+export default function TopBar({ focus, onLookup, onOpenTopic, onNavigate, onToggleDrawer, onHome }) {
   const [q, setQ] = useState('')
   const [active, setActive] = useState(-1)
   const [showSuggest, setShowSuggest] = useState(false)
@@ -32,7 +32,7 @@ export default function TopBar({ focus, onLookup, onOpenTopic, onNavigate, onTog
       <button className="icon-btn menu-btn" onClick={onToggleDrawer} aria-label="Toggle study panel">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M4 12h16M4 18h10" /></svg>
       </button>
-      <a className="brand" href="#/John.3.16" aria-label="Mantles home">
+      <a className="brand" href="#/John.3" onClick={onHome} aria-label="Mantles home">
         <svg className="brand-mark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           {/* A sword: blade with fuller, crossguard, grip, pommel. */}
           <path d="M12 2l2 3v10h-4V5z" />
