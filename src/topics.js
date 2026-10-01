@@ -169,6 +169,22 @@ export const TOPICS = [
     ],
   },
   {
+    id: 'evil-defeated',
+    title: 'Evil Is Defeated',
+    keywords: ['evil is defeated', 'evil defeated', 'evil', 'defeated', 'defeat', 'victory over evil', 'satan defeated', 'triumph', 'overcome', 'overcomer', 'darkness', 'death defeated'],
+    blurb: 'Promised in the garden, won at the cross, enforced by His people, and finished at His return.',
+    sections: [
+      { heading: 'The first promise', refs: ['Gen.3.15', 'Rom.16.20', 'Isa.53.5', 'Gal.4.4-5'] },
+      { heading: 'Disarmed at the cross', refs: ['Col.2.13-15', 'Heb.2.14-15', '1John.3.8', 'John.12.31-32', 'John.16.11', 'John.19.30'] },
+      { heading: 'Satan cast down', refs: ['Luke.10.18-19', 'Rev.12.7-9', 'Rev.12.10-11', 'Isa.14.12-15', 'Matt.12.28-29'] },
+      { heading: 'Death has lost its sting', refs: ['1Cor.15.54-57', 'Hos.13.14', 'Isa.25.8', '2Tim.1.10', 'Rev.1.17-18'] },
+      { heading: 'The light overcomes the darkness', refs: ['John.1.5', 'John.16.33', 'Col.1.13', '1John.4.4', '1John.5.4-5', 'Rom.8.37'] },
+      { heading: 'Overcome evil with good', refs: ['Rom.12.21', 'Gen.50.20', 'Jas.4.7', 'Eph.6.10-11', '1Pet.5.8-10'] },
+      { heading: 'The wicked will not last', refs: ['Ps.37.1-2', 'Ps.37.10-11', 'Ps.92.7', 'Prov.24.19-20', 'Mal.4.1-3'] },
+      { heading: 'The final victory', refs: ['Rev.20.10', 'Rev.20.14', 'Rev.21.3-4', 'Rev.22.3', '1Cor.15.24-26', 'Rev.11.15'] },
+    ],
+  },
+  {
     id: 'rest',
     title: 'His Rest',
     keywords: ['rest', 'his rest', 'sabbath', 'weary', 'tired', 'burnout', 'sleep', 'stillness', 'be still', 'striving'],
