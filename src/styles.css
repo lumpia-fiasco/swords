@@ -48,12 +48,15 @@ button { cursor: pointer; }
 /* ---------- Layout ---------- */
 /* Top bar, then sidebar | reader | names, then Patterns across the full width. */
 .app {
-  --pat-h: 33vh;
+  /* Patterns: a 52px bar when collapsed (the default), a third of the window when open. */
+  --pat-h: 52px;
   height: 100%;
   display: grid;
   grid-template-rows: var(--topbar) minmax(0, 1fr) var(--pat-h);
   grid-template-columns: minmax(0, 1fr);
+  transition: grid-template-rows 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+.app.tray-open { --pat-h: 33vh; }
 .workspace { display: flex; min-height: 0; min-width: 0; position: relative; }
 .sidebar { width: var(--sidebar); flex: none; }
 .reader { flex: 1; min-width: 0; }
@@ -624,17 +627,24 @@ button { cursor: pointer; }
   flex-direction: column;
   min-height: 0;
   min-width: 0;
+  overflow: hidden;
   background: var(--surface);
   box-shadow: 0 -1px 2px rgb(20 20 16 / 0.05), 0 -10px 28px rgb(20 20 16 / 0.08);
   position: relative;
   z-index: 15;
 }
 .pat-head { display: flex; align-items: center; gap: 14px; padding: 10px 16px 8px; flex: none; min-width: 0; }
-.pat-handle { display: flex; align-items: baseline; gap: 10px; flex: none; padding: 4px 0; border: 0; background: none; cursor: default; text-align: left; min-width: 0; }
+.pat-handle { display: flex; align-items: baseline; gap: 10px; flex: 1; padding: 4px 0; border: 0; background: none; cursor: pointer; text-align: left; min-width: 0; }
+.app.tray-open .pat-handle { flex: none; }
 .pat-title { font-family: var(--display); font-size: 19px; color: var(--ink); }
 .pat-sub { font-size: 13px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.pat-sub.tray { display: none; }
-.pat-chevron { display: none; color: var(--ink-3); transition: rotate 0.2s; align-self: center; }
+/* Collapsed: show what's selected. Open: a fixed subtitle, plus the filters and search. */
+.pat-sub.docked, .app.tray-open .pat-sub.tray { display: none; }
+.app.tray-open .pat-sub.docked { display: block; }
+.app:not(.tray-open) .pat-groups, .app:not(.tray-open) .pat-search { display: none; }
+.pat-chevron { color: var(--ink-3); transition: rotate 0.2s; align-self: center; flex: none; }
+.app.tray-open .pat-chevron { rotate: 180deg; }
+.pat-handle:hover .pat-chevron, .pat-handle:hover .pat-title { color: var(--accent-ink); }
 .pat-groups {
   display: flex;
   gap: 6px;
@@ -720,7 +730,7 @@ button { cursor: pointer; }
 
 /* Short windows: Patterns becomes a tray that slides up from the bottom. */
 @media (max-height: 767px) {
-  .app { --pat-h: 52px; grid-template-rows: var(--topbar) minmax(0, 1fr); }
+  .app, .app.tray-open { --pat-h: 52px; grid-template-rows: var(--topbar) minmax(0, 1fr); }
   .workspace { margin-bottom: var(--pat-h); }
   .patterns {
     position: fixed;
@@ -734,14 +744,7 @@ button { cursor: pointer; }
     overflow: hidden;
   }
   .app.tray-open .patterns { height: min(78vh, calc(100vh - var(--topbar) - 12px)); }
-  .pat-handle { cursor: pointer; flex: 1; }
-  .pat-chevron { display: block; }
-  .app.tray-open .pat-chevron { rotate: 180deg; }
-  .app:not(.tray-open) .pat-groups, .app:not(.tray-open) .pat-search { display: none; }
-  .app.tray-open .pat-handle { flex: none; }
-  .pat-sub.docked { display: none; }
-  .pat-sub.tray { display: block; }
-  .app.tray-open .pat-sub.tray { display: none; }
+  .app.tray-open .pat-sub.docked { display: none; }
 }
 
 /* Narrow: list or detail, one at a time. */

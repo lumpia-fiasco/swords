@@ -57,7 +57,7 @@ export default function PatternsPanel({ focus, onOpen, trayOpen, onToggleTray })
       <header className="pat-head">
         <button className="pat-handle" onClick={() => onToggleTray(!trayOpen)} aria-expanded={trayOpen}>
           <span className="pat-title">Patterns</span>
-          {/* Docked: a fixed subtitle. Collapsed tray: what's selected. */}
+          {/* Open: a fixed subtitle. Collapsed: what's selected. */}
           <span className="pat-sub docked">Shadows and their fulfillment</span>
           <span className="pat-sub tray">{current.a} → {current.b}</span>
           <svg className="pat-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
