@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { parseOsis, toOsis, parseTyped } from './ref.js'
 import { matchTopics } from './topics.js'
 import TopBar from './components/TopBar.jsx'
@@ -22,17 +22,27 @@ export default function App() {
   const [focus, setFocus] = useState(readHash)
   // The verse whose cross-references the sidebar shows.
   const [selected, setSelected] = useState(() => (focus.verse ? { book: focus.book, chapter: focus.chapter, verse: focus.verse } : null))
-  const [panel, setPanel] = useState({ tab: 'topics', topicId: 'promises', query: '' })
+  // A link to a specific verse opens straight to its cross-references.
+  const [panel, setPanel] = useState({ tab: focus.verse ? 'xref' : 'topics', topicId: 'promises', query: '' })
   const [drawerOpen, setDrawerOpen] = useState(false)
+  // Hash the app set itself, so in-app navigation isn't mistaken for a followed link.
+  const ownHash = useRef(null)
 
   useEffect(() => {
-    const onHash = () => setFocus(readHash())
+    const onHash = () => {
+      const ref = readHash()
+      setFocus(ref)
+      if (location.hash === ownHash.current || !ref.verse) return
+      setSelected({ book: ref.book, chapter: ref.chapter, verse: ref.verse })
+      setPanel((p) => ({ ...p, tab: 'xref' }))
+    }
     addEventListener('hashchange', onHash)
     return () => removeEventListener('hashchange', onHash)
   }, [])
 
   const open = useCallback((ref, { showRefs = true } = {}) => {
-    location.hash = `#/${toOsis(ref)}`
+    ownHash.current = `#/${toOsis(ref)}`
+    location.hash = ownHash.current
     // A new object re-triggers scroll-to-verse even when the hash is unchanged.
     setFocus({ ...ref })
     if (ref.verse && showRefs) setSelected({ book: ref.book, chapter: ref.chapter, verse: ref.verse })
