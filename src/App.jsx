@@ -5,6 +5,7 @@ import TopBar from './components/TopBar.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import Reader from './components/Reader.jsx'
 import NamePanel from './components/NamePanel.jsx'
+import PatternsPanel from './components/PatternsPanel.jsx'
 
 // With no verse in the URL, open on a chapter (no verse selected) and the topic list.
 const DEFAULT = { book: 'John', chapter: 3 }
@@ -28,6 +29,10 @@ export default function App() {
   // The topic list by default; a verse in the URL opens straight to its cross-references.
   const [panel, setPanel] = useState({ tab: focus.verse ? 'xref' : 'topics', topicId: null, query: '' })
   const [drawerOpen, setDrawerOpen] = useState(false)
+  // Desktop: the hamburger collapses the sidebar instead of opening a drawer.
+  const [navCollapsed, setNavCollapsed] = useState(false)
+  // Short windows show Patterns as a tray from the bottom.
+  const [trayOpen, setTrayOpen] = useState(false)
   // Name tapped in the reader: { ids, nt } shown in the right panel.
   const [nameView, setNameView] = useState(null)
   // Hash the app set itself, so in-app navigation isn't mistaken for a followed link.
@@ -83,30 +88,46 @@ export default function App() {
   )
 
   return (
-    <div className={`app ${drawerOpen ? 'drawer-open' : ''} ${nameView ? 'names-open' : ''}`}>
+    <div className={`app ${drawerOpen ? 'drawer-open' : ''} ${nameView ? 'names-open' : ''} ${navCollapsed ? 'nav-collapsed' : ''} ${trayOpen ? 'tray-open' : ''}`}>
       <TopBar
         focus={focus}
         onLookup={lookup}
         onOpenTopic={(id) => { setPanel({ tab: 'topics', topicId: id, query: '' }); setDrawerOpen(true) }}
-        onNavigate={(ref) => open(ref, { showRefs: false })}
-        onToggleDrawer={() => setDrawerOpen((o) => !o)}
+        onToggleDrawer={() => {
+          if (matchMedia('(max-width: 900px)').matches) setDrawerOpen((o) => !o)
+          else setNavCollapsed((c) => !c)
+        }}
         onHome={() => { setSelected(null); setPanel({ tab: 'topics', topicId: null, query: '' }) }}
       />
-      <Sidebar
-        panel={panel}
-        setPanel={setPanel}
-        selected={selected}
-        onOpen={open}
-        onClose={() => setDrawerOpen(false)}
-      />
-      <div className="scrim" onClick={() => setDrawerOpen(false)} />
-      <Reader
+      <div className="workspace">
+        <Sidebar
+          panel={panel}
+          setPanel={setPanel}
+          selected={selected}
+          focus={focus}
+          onOpen={open}
+          onNavigate={(ref) => open(ref, { showRefs: false })}
+          onClose={() => setDrawerOpen(false)}
+        />
+        <div className="scrim" onClick={() => setDrawerOpen(false)} />
+        <Reader
+          focus={focus}
+          onSelectVerse={selectVerse}
+          onNavigate={(ref) => open(ref, { showRefs: false })}
+          onName={(ids, nt) => setNameView({ ids, nt })}
+        />
+        <NamePanel view={nameView} onClose={() => setNameView(null)} onOpen={(ref) => open(ref)} />
+      </div>
+      <PatternsPanel
         focus={focus}
-        onSelectVerse={selectVerse}
-        onNavigate={(ref) => open(ref, { showRefs: false })}
-        onName={(ids, nt) => setNameView({ ids, nt })}
+        trayOpen={trayOpen}
+        onToggleTray={setTrayOpen}
+        onOpen={(ref) => {
+          open(ref)
+          // In tray mode, get out of the way so the passage is visible.
+          if (matchMedia('(max-height: 767px)').matches) setTrayOpen(false)
+        }}
       />
-      <NamePanel view={nameView} onClose={() => setNameView(null)} onOpen={(ref) => open(ref)} />
     </div>
   )
 }

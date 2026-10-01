@@ -1,9 +1,9 @@
 import { useMemo, useRef, useState } from 'react'
-import { BOOKS, bookById } from '../books.js'
+import { bookById } from '../books.js'
 import { parseTyped, label } from '../ref.js'
 import { matchTopics } from '../topics.js'
 
-export default function TopBar({ focus, onLookup, onOpenTopic, onNavigate, onToggleDrawer, onHome }) {
+export default function TopBar({ focus, onLookup, onOpenTopic, onToggleDrawer, onHome }) {
   const [q, setQ] = useState('')
   const [active, setActive] = useState(-1)
   const [showSuggest, setShowSuggest] = useState(false)
@@ -29,7 +29,7 @@ export default function TopBar({ focus, onLookup, onOpenTopic, onNavigate, onTog
 
   return (
     <header className="topbar">
-      <button className="icon-btn menu-btn" onClick={onToggleDrawer} aria-label="Toggle study panel">
+      <button className="icon-btn menu-btn" onClick={onToggleDrawer} aria-label="Books, topics and cross-references">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M4 12h16M4 18h10" /></svg>
       </button>
       <a className="brand" href="#/John.3" onClick={onHome} aria-label="Mantles home">
@@ -82,22 +82,6 @@ export default function TopBar({ focus, onLookup, onOpenTopic, onNavigate, onTog
         )}
       </form>
 
-      <nav className="nav" aria-label="Book and chapter">
-        <select value={focus.book} onChange={(e) => onNavigate({ book: e.target.value, chapter: 1 })} aria-label="Book">
-          <optgroup label="Old Testament">
-            {BOOKS.filter((b) => b.testament === 'OT').map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-          </optgroup>
-          <optgroup label="New Testament">
-            {BOOKS.filter((b) => b.testament === 'NT').map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-          </optgroup>
-          <optgroup label="Other writings">
-            {BOOKS.filter((b) => b.testament === 'EXTRA').map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-          </optgroup>
-        </select>
-        <select value={focus.chapter} onChange={(e) => onNavigate({ book: focus.book, chapter: +e.target.value })} aria-label="Chapter">
-          {Array.from({ length: book?.chapters ?? 1 }, (_, i) => <option key={i + 1} value={i + 1}>{i + 1}</option>)}
-        </select>
-      </nav>
     </header>
   )
 }

@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "xrefs": "node scripts/build-xrefs.mjs",
     "names": "node scripts/build-names.mjs",
-    "enoch": "node scripts/build-enoch.mjs"
+    "enoch": "node scripts/build-enoch.mjs",
+    "check-patterns": "node scripts/check-patterns.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",

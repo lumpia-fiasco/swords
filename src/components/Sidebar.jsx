@@ -5,6 +5,7 @@ import { getCrossRefs } from '../xref.js'
 import { bookById } from '../books.js'
 import { label, parseOsis } from '../ref.js'
 import VerseCard from './VerseCard.jsx'
+import BooksPanel from './BooksPanel.jsx'
 
 // Fetches verse text for a list of refs in one batched request.
 function usePassages(refs) {
@@ -21,8 +22,9 @@ function usePassages(refs) {
   return { map, error }
 }
 
-export default function Sidebar({ panel, setPanel, selected, onOpen, onClose }) {
+export default function Sidebar({ panel, setPanel, selected, focus, onOpen, onNavigate, onClose }) {
   const tabs = [
+    ['books', 'Books'],
     ['topics', 'Topics'],
     ['xref', 'Cross-references'],
     ...(panel.query ? [['search', 'Search']] : []),
@@ -38,6 +40,7 @@ export default function Sidebar({ panel, setPanel, selected, onOpen, onClose }) 
         <button className="icon-btn close-btn" onClick={onClose} aria-label="Close study panel">✕</button>
       </div>
       <div className="panel">
+        {panel.tab === 'books' && <BooksPanel focus={focus} onNavigate={onNavigate} />}
         {panel.tab === 'topics' && (
           <TopicsPanel topicId={panel.topicId} onPick={(id) => setPanel((p) => ({ ...p, topicId: id }))} onOpen={onOpen} />
         )}
