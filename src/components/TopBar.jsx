@@ -32,12 +32,12 @@ export default function TopBar({ focus, onLookup, onOpenTopic, onNavigate, onTog
       <button className="icon-btn menu-btn" onClick={onToggleDrawer} aria-label="Toggle study panel">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M4 12h16M4 18h10" /></svg>
       </button>
-      <a className="brand" href="#/John.3.16" aria-label="Swords home">
+      <a className="brand" href="#/John.3.16" aria-label="Mantles home">
         <svg className="brand-mark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M12 2c2.5 3 4.5 5.2 4.5 8.5A4.5 4.5 0 0 1 12 15a4.5 4.5 0 0 1-4.5-4.5C7.5 8.3 9 7 9.5 5c1 1.3 1.6 2.2 2.5 2.5C12 5.5 12 4 12 2Z" />
           <path d="M12 15v7M9 19h6" />
         </svg>
-        <span>Swords</span>
+        <span>Mantles</span>
         <span className="tag">NLT</span>
       </a>
 

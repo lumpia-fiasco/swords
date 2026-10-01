@@ -1,4 +1,4 @@
-# Swords
+# Mantles
 
 A Spirit-filled NLT study Bible. Look up a verse, a topic, or any word. The left panel shows related Scripture, and every verse in it opens in its full chapter.
 
