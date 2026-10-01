@@ -34,11 +34,10 @@ export default function TopBar({ focus, onLookup, onOpenTopic, onNavigate, onTog
       </button>
       <a className="brand" href="#/John.3.16" aria-label="Mantles home">
         <svg className="brand-mark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          {/* A draped cloak: shoulders, clasp, falling folds, rippled hem. */}
-          <path d="M8 4C5.6 4.8 4.6 7 4.5 9.5L4 20.5q2 .8 4 0t4 0 4 0 4 0l-.5-11C19.4 7 18.4 4.8 16 4" />
-          <path d="M8 4q4 2.6 8 0" />
-          <circle cx="12" cy="5.3" r=".6" fill="currentColor" />
-          <path d="M12 6.2c-1.6 4.4-2.7 9-3.2 14.3M12 6.2c1.6 4.4 2.7 9 3.2 14.3" />
+          {/* A sword: blade with fuller, crossguard, grip, pommel. */}
+          <path d="M12 2l2 3v10h-4V5z" />
+          <path d="M12 6v7.5M7 15h10M12 15v4.5" />
+          <circle cx="12" cy="21" r="1.2" />
         </svg>
         <span>Mantles</span>
         <span className="tag">NLT</span>
