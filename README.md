@@ -18,6 +18,7 @@ Then open http://localhost:5173.
   NLT_API_KEY=your-key
   ```
 - **Cross-references:** about 208k links from [OpenBible.info](https://www.openbible.info/labs/cross-references/) (CC-BY), ranked by community votes. `npm run xrefs` rebuilds `public/xref/*.json` from `data/cross_references.txt`.
+- **Names:** tap any person, place or name of God in the text to open a right-hand panel. It shows the original Hebrew (or Greek, with the Hebrew behind it), the transliteration, the meaning, a short description, family links and where the name first appears. People and places come from STEPBible's [TIPNR](https://github.com/STEPBible/STEPBible-Data) and Hebrew lexicon (Tyndale House Cambridge, CC BY 4.0). TIPNR lists every verse each individual appears in, so two people with the same name resolve correctly (John the Baptist vs. John son of Zebedee). `npm run names` downloads the source files into `data/` and rebuilds `public/names/`. STEPBible asks that their raw files not be redistributed, so those downloads are git-ignored. The names and titles of God (YHWH, Elohim, Adonai, El Shaddai, Yeshua, Mashiach, Ruach HaKodesh and others) are curated in `src/divine.js`.
 - **Topics:** a hand-curated, charismatic-leaning index in `src/topics.js`. It covers God's Promises (16 categories), the Holy Spirit, Baptism in the Spirit, Gifts, Tongues, Prophecy, Healing, Signs & Wonders, Authority, Deliverance, Worship, and more. To add or edit a topic, edit the refs; the verse text loads on its own.
 
 ## Deploying

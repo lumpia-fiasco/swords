@@ -4,3 +4,7 @@ dist
 .env.local
 .claude
 .DS_Store
+# STEPBible raw data: downloaded by `npm run names`, not redistributed (per their license)
+data/tipnr.txt
+data/tbesh.txt
+data/tbesg.txt

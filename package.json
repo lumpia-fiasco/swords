@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "xrefs": "node scripts/build-xrefs.mjs"
+    "xrefs": "node scripts/build-xrefs.mjs",
+    "names": "node scripts/build-names.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",

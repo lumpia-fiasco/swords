@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { getChapter } from '../nlt.js'
 import { versesWithRefs } from '../xref.js'
+import { chapterNames, linkNames } from '../names.js'
 import { bookById, BOOKS } from '../books.js'
 import { containsVerse } from '../ref.js'
 
@@ -13,10 +14,11 @@ function neighbor(book, chapter, dir) {
   return { book: BOOKS[i].id, chapter: dir > 0 ? 1 : BOOKS[i].chapters }
 }
 
-export default function Reader({ focus, selected, onSelectVerse, onNavigate }) {
+export default function Reader({ focus, selected, onSelectVerse, onNavigate, onName }) {
   const { book, chapter } = focus
   const [state, setState] = useState({ status: 'loading', blocks: [] })
   const [hasRefs, setHasRefs] = useState(new Set())
+  const [names, setNames] = useState(new Map())
   const scrollRef = useRef(null)
 
   useEffect(() => {
@@ -26,6 +28,8 @@ export default function Reader({ focus, selected, onSelectVerse, onNavigate }) {
       .then((blocks) => live && setState({ status: 'ready', blocks }))
       .catch((e) => live && setState({ status: 'error', blocks: [], error: e.message }))
     versesWithRefs(book, chapter).then((s) => live && setHasRefs(s))
+    setNames(new Map())
+    chapterNames(book, chapter).then((n) => live && setNames(n)).catch(() => {})
     return () => { live = false }
   }, [book, chapter])
 
@@ -47,13 +51,29 @@ export default function Reader({ focus, selected, onSelectVerse, onNavigate }) {
     return {
       'data-v': first ? v : undefined,
       className: `v ${isFocus ? 'focus' : ''} ${isSel ? 'sel' : ''}`,
-      onClick: () => onSelectVerse({ book, chapter, verse: v }),
-      onKeyDown: (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), onSelectVerse({ book, chapter, verse: v })),
+      onClick: (e) => {
+        if (openName(e)) return
+        onSelectVerse({ book, chapter, verse: v })
+      },
+      onKeyDown: (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return
+        e.preventDefault()
+        if (!openName(e)) onSelectVerse({ book, chapter, verse: v })
+      },
       role: 'button',
       tabIndex: first ? 0 : -1,
       title: 'Show cross-references',
     }
   }
+  // A tapped name opens its details instead of selecting the verse.
+  const openName = (e) => {
+    const el = e.target.closest?.('[data-nm]')
+    if (!el) return false
+    e.stopPropagation()
+    onName(el.dataset.nm.split(','), bookById[book].testament === 'NT')
+    return true
+  }
+  const linked = (html, v) => ({ __html: linkNames(html, names.get(v)) })
   const num = (v, first) => first && <sup className={`vn ${hasRefs.has(v) ? 'has-refs' : ''}`}>{v}</sup>
 
   return (
@@ -62,7 +82,7 @@ export default function Reader({ focus, selected, onSelectVerse, onNavigate }) {
         <header className="chapter-head">
           <p className="eyebrow">New Living Translation</p>
           <h1>{name} <span>{chapter}</span></h1>
-          <p className="hint">Tap any verse to see its cross-references.</p>
+          <p className="hint">Tap a verse for cross-references, or a name for its Hebrew meaning.</p>
         </header>
 
         {state.status === 'loading' && (
@@ -86,7 +106,7 @@ export default function Reader({ focus, selected, onSelectVerse, onNavigate }) {
                   <p key={i} className={`poetry indent-${b.indent}`}>
                     <span {...verseProps(b.verse, b.first)}>
                       {num(b.verse, b.first)}
-                      <span dangerouslySetInnerHTML={{ __html: b.html }} />
+                      <span dangerouslySetInnerHTML={linked(b.html, b.verse)} />
                     </span>
                   </p>
                 )
@@ -96,7 +116,7 @@ export default function Reader({ focus, selected, onSelectVerse, onNavigate }) {
                     <Fragment key={j}>
                       <span {...verseProps(s.verse, s.first)}>
                         {num(s.verse, s.first)}
-                        <span dangerouslySetInnerHTML={{ __html: s.html }} />
+                        <span dangerouslySetInnerHTML={linked(s.html, s.verse)} />
                       </span>{' '}
                     </Fragment>
                   ))}

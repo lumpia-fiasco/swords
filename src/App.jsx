@@ -4,6 +4,7 @@ import { matchTopics } from './topics.js'
 import TopBar from './components/TopBar.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import Reader from './components/Reader.jsx'
+import NamePanel from './components/NamePanel.jsx'
 
 const DEFAULT = { book: 'John', chapter: 3, verse: 16 }
 
@@ -25,6 +26,8 @@ export default function App() {
   // A link to a specific verse opens straight to its cross-references.
   const [panel, setPanel] = useState({ tab: focus.verse ? 'xref' : 'topics', topicId: 'promises', query: '' })
   const [drawerOpen, setDrawerOpen] = useState(false)
+  // Name tapped in the reader: { ids, nt } shown in the right panel.
+  const [nameView, setNameView] = useState(null)
   // Hash the app set itself, so in-app navigation isn't mistaken for a followed link.
   const ownHash = useRef(null)
 
@@ -78,7 +81,7 @@ export default function App() {
   )
 
   return (
-    <div className={`app ${drawerOpen ? 'drawer-open' : ''}`}>
+    <div className={`app ${drawerOpen ? 'drawer-open' : ''} ${nameView ? 'names-open' : ''}`}>
       <TopBar
         focus={focus}
         onLookup={lookup}
@@ -94,7 +97,14 @@ export default function App() {
         onClose={() => setDrawerOpen(false)}
       />
       <div className="scrim" onClick={() => setDrawerOpen(false)} />
-      <Reader focus={focus} selected={selected} onSelectVerse={selectVerse} onNavigate={(ref) => open(ref, { showRefs: false })} />
+      <Reader
+        focus={focus}
+        selected={selected}
+        onSelectVerse={selectVerse}
+        onNavigate={(ref) => open(ref, { showRefs: false })}
+        onName={(ids, nt) => setNameView({ ids, nt })}
+      />
+      <NamePanel view={nameView} onClose={() => setNameView(null)} onOpen={(ref) => open(ref)} />
     </div>
   )
 }
