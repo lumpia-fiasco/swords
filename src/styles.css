@@ -270,12 +270,12 @@ button { cursor: pointer; }
 .card-text {
   margin: 0;
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: 16.5px;
   line-height: 1.6;
   color: var(--ink);
   text-wrap: pretty;
 }
-.card-text sup { font-family: var(--display); font-weight: 600; font-size: 11px; color: var(--ink-3); margin-right: 2px; }
+.card-text sup { font-family: var(--display); font-weight: 600; font-size: 12px; color: var(--ink-3); margin-right: 2px; }
 .card-text.context .around { color: var(--ink-3); }
 .card-text.context .core { background: var(--focus-bg); border-radius: 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 .card-actions { display: flex; justify-content: space-between; padding: 0 8px 6px; }
