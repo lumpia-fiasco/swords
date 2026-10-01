@@ -19,7 +19,8 @@
   --shadow-in: inset 0 1px 3px rgb(20 20 16 / 0.09), inset 0 0 0 1px rgb(20 20 16 / 0.02);
   --shadow: var(--shadow-2);
   --serif: 'Old Standard TT', Georgia, 'Times New Roman', serif;
-  --display: 'Afacad', var(--sans);
+  /* Cal Sans ships one (heavy) weight, so display text always uses font-weight: 400. */
+  --display: 'Cal Sans', var(--sans);
   --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --topbar: 60px;
   --sidebar: 400px;
@@ -196,7 +197,7 @@ button { cursor: pointer; }
 .close-btn { margin-left: auto; }
 
 .panel { flex: 1; overflow-y: auto; padding: 18px 16px 40px; scrollbar-gutter: stable; overscroll-behavior: contain; }
-.panel-title { font-family: var(--display); font-size: 26px; font-weight: 600; line-height: 1.15; margin: 0 0 6px; letter-spacing: -0.01em; }
+.panel-title { font-family: var(--display); font-size: 25px; font-weight: 400; line-height: 1.15; margin: 0 0 6px; letter-spacing: -0.01em; }
 .panel-intro { color: var(--ink-2); line-height: 1.5; margin: 0 0 16px; text-wrap: pretty; }
 .eyebrow {
   margin: 0 0 4px;
@@ -271,7 +272,7 @@ button { cursor: pointer; }
 .card:hover { box-shadow: var(--shadow-2); translate: 0 -1px; }
 .card-body { padding: 12px 14px 8px; cursor: pointer; }
 .card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
-.card-ref { font-family: var(--display); font-weight: 600; font-size: 16px; color: var(--accent-ink); }
+.card-ref { font-family: var(--display); font-weight: 400; font-size: 15px; letter-spacing: 0.01em; color: var(--accent-ink); }
 .card-text {
   margin: 0;
   font-family: var(--serif);
@@ -280,7 +281,7 @@ button { cursor: pointer; }
   color: var(--ink);
   text-wrap: pretty;
 }
-.card-text sup { font-family: var(--display); font-weight: 600; font-size: 12px; color: var(--ink-3); margin-right: 2px; }
+.card-text sup { font-family: var(--display); font-weight: 400; font-size: 11px; color: var(--ink-3); margin-right: 2px; }
 .card-text.context .around { color: var(--ink-3); }
 .card-text.context .core { background: var(--focus-bg); border-radius: 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 .card-actions { display: flex; justify-content: space-between; padding: 0 8px 6px; }
@@ -289,8 +290,9 @@ button { cursor: pointer; }
   background: none;
   padding: 6px;
   font-family: var(--display);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
   color: var(--ink-3);
   border-radius: 6px;
 }
@@ -358,8 +360,8 @@ button { cursor: pointer; }
 .chapter-head h1 {
   margin: 0;
   font-family: var(--display);
-  font-weight: 600;
-  font-size: 46px;
+  font-weight: 400;
+  font-size: 44px;
   letter-spacing: -0.02em;
   line-height: 1.1;
 }
@@ -394,8 +396,8 @@ button { cursor: pointer; }
 .v.sel { background: var(--sel-bg); }
 .vn {
   font-family: var(--display);
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 11.5px;
+  font-weight: 400;
   color: var(--ink-3);
   margin-right: 3px;
   vertical-align: 0.6em;
@@ -480,7 +482,7 @@ button { cursor: pointer; }
 .name-panel-label { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
 .name-panel-body { flex: 1; overflow-y: auto; padding: 6px 18px 40px; overscroll-behavior: contain; }
 .name-entry + .name-entry { margin-top: 28px; padding-top: 24px; box-shadow: 0 -1px 0 var(--surface-2); }
-.name-title { font-family: var(--display); font-size: 34px; font-weight: 600; line-height: 1.05; margin: 2px 0 4px; letter-spacing: -0.01em; }
+.name-title { font-family: var(--display); font-size: 32px; font-weight: 400; line-height: 1.05; margin: 2px 0 4px; letter-spacing: -0.01em; }
 .name-brief { margin: 0 0 18px; color: var(--ink-2); line-height: 1.45; }
 .orig { display: flex; align-items: center; gap: 14px; margin: 0 0 10px; }
 .orig.primary {
@@ -500,7 +502,7 @@ button { cursor: pointer; }
 .orig.primary .orig-script.grk { font-size: 36px; }
 .orig-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
 .orig-lang { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
-.orig-translit { font-family: var(--display); font-size: 16px; color: var(--ink-2); }
+.orig-translit { font-family: var(--display); font-size: 15px; letter-spacing: 0.01em; color: var(--ink-2); }
 .orig-en { font-size: 13px; color: var(--ink-3); }
 .orig-meaning { flex-basis: 100%; font-size: 13.5px; color: var(--ink-2); }
 .meaning { margin: 4px 0 16px; }
