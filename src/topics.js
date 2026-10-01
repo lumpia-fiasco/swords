@@ -248,13 +248,28 @@ export const TOPICS = [
   {
     id: 'hearing-god',
     title: "Hearing God's Voice",
-    keywords: ['hearing god', 'voice', 'hear god', 'listen', 'leading', 'direction', 'dreams', 'visions'],
+    keywords: ['hearing god', 'voice', 'hear god', 'listen', 'leading', 'direction', 'still small voice'],
     blurb: 'My sheep listen to my voice.',
     sections: [
       { heading: 'His sheep hear His voice', refs: ['John.10.3-4', 'John.10.27', 'Isa.30.21', 'Rom.8.14', 'Heb.3.15'] },
       { heading: 'Still, small whisper', refs: ['1Kgs.19.11-12', 'Ps.46.10', '1Sam.3.10', 'Isa.50.4'] },
       { heading: 'Dreams & visions', refs: ['Joel.2.28', 'Acts.2.17', 'Job.33.14-16', 'Acts.16.9-10', 'Acts.10.9-11', 'Num.12.6'] },
       { heading: 'Led by the Spirit', refs: ['John.16.13', 'Acts.13.2', 'Acts.16.6-7', 'Prov.3.5-6', 'Ps.32.8'] },
+    ],
+  },
+  {
+    id: 'dreams',
+    title: 'Prophetic Dreams',
+    keywords: ['prophetic dreams', 'dreams', 'dream', 'visions', 'vision', 'night visions', 'dream interpretation', 'interpretation', 'interpret'],
+    blurb: 'God speaks in the night: dreams that reveal destiny, guide and protect, warn kings, and need His interpretation.',
+    sections: [
+      { heading: 'God speaks in dreams', refs: ['Num.12.6', 'Job.33.14-16', 'Joel.2.28', 'Acts.2.17', 'Ps.16.7', 'Gen.20.3'] },
+      { heading: 'Night visions', refs: ['Gen.28.12-15', 'Gen.46.2-3', 'Job.4.13', 'Acts.16.9-10', 'Acts.18.9-10'] },
+      { heading: 'Dreams of destiny', refs: ['Gen.37.5-7', 'Gen.37.9', 'Gen.42.9', '1Kgs.3.5', '1Kgs.3.15', 'Judg.7.13-15'] },
+      { heading: 'Dreams that guide & protect', refs: ['Matt.1.20-21', 'Matt.2.12', 'Matt.2.13', 'Matt.2.19-20', 'Matt.2.22', 'Matt.27.19'] },
+      { heading: 'Dreams for kings & nations', refs: ['Gen.41.25', 'Gen.41.32', 'Dan.2.19', 'Dan.2.27-28', 'Dan.4.18', 'Dan.7.1'] },
+      { heading: 'Interpretation belongs to God', refs: ['Gen.40.8', 'Gen.41.15-16', 'Dan.2.22', 'Dan.2.47', 'Dan.5.12', 'Prov.25.2'] },
+      { heading: 'Test every dream', refs: ['Deut.13.1-3', 'Jer.23.28', 'Jer.29.8-9', 'Eccl.5.7', '1Thess.5.21', '1John.4.1'] },
     ],
   },
   {
