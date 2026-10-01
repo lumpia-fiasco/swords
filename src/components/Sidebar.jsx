@@ -118,9 +118,11 @@ function XrefPanel({ selected, onOpen, onTopic }) {
   }
 
   const topics = topicsForVerse(selected.book, selected.chapter, selected.verse)
-  const isOT = (r) => bookById[parseOsis(r).book]?.testament === 'OT'
+  const shelf = (r) => bookById[parseOsis(r).book]?.testament
   const groups = xrefs
-    ? [['Old Testament', xrefs.filter((x) => isOT(x.ref))], ['New Testament', xrefs.filter((x) => !isOT(x.ref))]].filter(([, l]) => l.length)
+    ? [['Old Testament', 'OT'], ['New Testament', 'NT'], ['Other writings', 'EXTRA']]
+        .map(([title, t]) => [title, xrefs.filter((x) => shelf(x.ref) === t)])
+        .filter(([, l]) => l.length)
     : []
   const maxVotes = Math.max(1, ...(xrefs ?? []).map((x) => x.votes))
 
@@ -161,7 +163,14 @@ function XrefPanel({ selected, onOpen, onTopic }) {
           </ul>
         </section>
       ))}
-      {xrefs?.length > 0 && <p className="attribution">Cross-references from <a href="https://www.openbible.info/labs/cross-references/" target="_blank" rel="noreferrer">OpenBible.info</a>, ranked by community votes.</p>}
+      {xrefs?.length > 0 && (
+        <p className="attribution">
+          {shelf(selOsis) === 'EXTRA' || groups.some(([t]) => t === 'Other writings')
+            ? 'Links between 1 Enoch and the Bible are curated: passages that quote or echo it. '
+            : ''}
+          Cross-references from <a href="https://www.openbible.info/labs/cross-references/" target="_blank" rel="noreferrer">OpenBible.info</a>, ranked by community votes.
+        </p>
+      )}
     </div>
   )
 }

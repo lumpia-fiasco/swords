@@ -25,6 +25,9 @@ export const BOOKS = [
   ['3John', '3 John', 1], ['Jude', 'Jude', 1], ['Rev', 'Revelation', 22],
 ].map(([id, name, chapters], i) => ({ id, name, chapters, testament: i < 39 ? 'OT' : 'NT' }))
 
+// Writings outside the canon, shown separately and never mixed into chapter-to-chapter paging.
+BOOKS.push({ id: 'Enoch', name: '1 Enoch', chapters: 108, testament: 'EXTRA', translation: 'R. H. Charles' })
+
 const API_CODES = { '1John': '1Jn', '2John': '2Jn', '3John': '3Jn', '1Thess': '1Th', '2Thess': '2Th' }
 export const apiCode = (id) => API_CODES[id] ?? id
 
@@ -43,6 +46,7 @@ const ALIASES = {
   Acts: ['ac', 'act'], Rom: ['ro', 'rm'], Gal: ['ga'], Eph: ['ephes'], Phil: ['php', 'pp'],
   Col: ['co'], Titus: ['tit'], Phlm: ['philem', 'phm'], Heb: ['he'], Jas: ['jm', 'jam'],
   Jude: ['jud', 'jd'], Rev: ['re', 'rv', 'revelations', 'apocalypse'],
+  Enoch: ['enoch', 'en', '1en', 'ienoch', 'firstenoch', 'ethiopic enoch', 'book of enoch'],
 }
 const NUMBERED = {
   Sam: ['sam', 'samuel', 'sa', 'sm'], Kgs: ['kgs', 'kings', 'ki', 'kg', 'kin'],

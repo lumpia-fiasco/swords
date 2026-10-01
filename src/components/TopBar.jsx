@@ -39,7 +39,7 @@ export default function TopBar({ focus, onLookup, onOpenTopic, onNavigate, onTog
           <path d="M12 13.2c1 1.1 2.1 2.1 2.1 3.6a2.1 2.1 0 0 1-4.2 0c0-1.5 1.1-2.5 2.1-3.6Z" />
         </svg>
         <span>Mantles</span>
-        <span className="tag">NLT</span>
+        <span className="tag">{book?.translation ? 'Charles' : 'NLT'}</span>
       </a>
 
       <form
@@ -89,6 +89,9 @@ export default function TopBar({ focus, onLookup, onOpenTopic, onNavigate, onTog
           </optgroup>
           <optgroup label="New Testament">
             {BOOKS.filter((b) => b.testament === 'NT').map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+          </optgroup>
+          <optgroup label="Other writings">
+            {BOOKS.filter((b) => b.testament === 'EXTRA').map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
           </optgroup>
         </select>
         <select value={focus.chapter} onChange={(e) => onNavigate({ book: focus.book, chapter: +e.target.value })} aria-label="Chapter">

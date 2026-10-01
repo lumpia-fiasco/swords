@@ -28,6 +28,30 @@ for (const line of src.split('\n').slice(1)) {
   ;((byBook[bk] ??= {})[`${ch}.${vs}`] ??= []).push([compact(to), votes])
 }
 
+// 1 Enoch isn't in the OpenBible data. Link it to the passages that quote or echo it,
+// in both directions.
+const ENOCH_LINKS = [
+  ['Enoch.1.9', 'Jude.1.14-15'],
+  ['Enoch.1.1', 'Gen.5.21-24'],
+  ['Enoch.6.1-2', 'Gen.6.1-4'],
+  ['Enoch.10.4-6', 'Jude.1.6'],
+  ['Enoch.10.4-6', '2Pet.2.4'],
+  ['Enoch.10.12-13', 'Jude.1.6'],
+  ['Enoch.10.12-13', '2Pet.2.4'],
+  ['Enoch.46.1-2', 'Dan.7.9-13'],
+  ['Enoch.70.1-2', 'Gen.5.24'],
+  ['Enoch.70.1-2', 'Heb.11.5'],
+]
+for (const [a, b] of ENOCH_LINKS) {
+  for (const [from, to] of [[a, b], [b, a]]) {
+    const [bk, ch, vsRange] = from.split('.')
+    const first = +vsRange.split('-')[0]
+    const list = ((byBook[bk] ??= {})[`${ch}.${first}`] ??= [])
+    // Rank just above the strongest existing link so the strength bars stay meaningful.
+    if (!list.some(([r]) => r === to)) list.push([to, Math.max(10, ...list.map(([, v]) => v)) + 1])
+  }
+}
+
 mkdirSync(new URL('../public/xref/', import.meta.url), { recursive: true })
 let total = 0
 for (const [bk, verses] of Object.entries(byBook)) {

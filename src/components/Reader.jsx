@@ -4,6 +4,7 @@ import { versesWithRefs } from '../xref.js'
 import { chapterNames, linkNames } from '../names.js'
 import { bookById, BOOKS } from '../books.js'
 import { containsVerse, label } from '../ref.js'
+import { ENOCH_NOTE } from '../enoch.js'
 
 // Plain text of one verse's HTML pieces (footnote markers and tags removed).
 function verseText(pieces) {
@@ -29,9 +30,11 @@ function neighbor(book, chapter, dir) {
   const b = bookById[book]
   if (dir > 0 && chapter < b.chapters) return { book, chapter: chapter + 1 }
   if (dir < 0 && chapter > 1) return { book, chapter: chapter - 1 }
-  const i = BOOKS.findIndex((x) => x.id === book) + dir
-  if (i < 0 || i >= BOOKS.length) return null
-  return { book: BOOKS[i].id, chapter: dir > 0 ? 1 : BOOKS[i].chapters }
+  // Page across books only within the canon (or only within the same extra writing).
+  const shelf = BOOKS.filter((x) => (x.testament === 'EXTRA') === (b.testament === 'EXTRA'))
+  const i = shelf.findIndex((x) => x.id === book) + dir
+  if (i < 0 || i >= shelf.length || b.testament === 'EXTRA') return null
+  return { book: shelf[i].id, chapter: dir > 0 ? 1 : shelf[i].chapters }
 }
 
 export default function Reader({ focus, onSelectVerse, onNavigate, onName }) {
@@ -90,7 +93,7 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName }) {
     const verses = [...pieces].sort((a, b) => a[0] - b[0])
     const ref = label({ book, chapter, verse: range.from, endVerse: range.to > range.from ? range.to : undefined })
     const body = verses.length === 1 ? verseText(verses[0][1]) : verses.map(([v, p]) => `${v} ${verseText(p)}`).join(' ')
-    await writeClipboard(`${body}\n— ${ref} (NLT)`)
+    await writeClipboard(`${body}\n— ${ref} (${bookById[book].translation ?? 'NLT'})`)
     setCopied(true)
     setTimeout(() => setCopied(false), 1600)
   }
@@ -106,6 +109,7 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName }) {
   const prev = neighbor(book, chapter, -1)
   const next = neighbor(book, chapter, 1)
   const name = bookById[book]?.name
+  const extra = bookById[book]?.testament === 'EXTRA'
 
   const verseProps = (v, first) => {
     const isFocus = containsVerse(focus, chapter, v)
@@ -144,10 +148,11 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName }) {
     <main className="reader" ref={scrollRef}>
       <article className="page">
         <header className="chapter-head">
-          <p className="eyebrow">New Living Translation</p>
+          <p className="eyebrow">{extra ? 'R. H. Charles translation · 1917' : 'New Living Translation'}</p>
           <h1>{name} <span>{chapter}</span></h1>
           <p className="hint">Tap a verse for cross-references and copying, or a name for its Hebrew meaning.</p>
         </header>
+        {extra && chapter === 1 && <p className="canon-note"><strong>About this book.</strong> {ENOCH_NOTE}</p>}
 
         {state.status === 'loading' && (
           <div className="skeleton" aria-label="Loading chapter">
@@ -156,7 +161,7 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName }) {
         )}
         {state.status === 'error' && (
           <div className="error">
-            <p>Couldn’t load {name} {chapter} from the NLT API.</p>
+            <p>Couldn’t load {name} {chapter}{extra ? '' : ' from the NLT API'}.</p>
             <p className="muted">{state.error}. Check your connection or API key, then try again.</p>
           </div>
         )}
@@ -196,9 +201,16 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName }) {
           ) : <span />}
           {next && <button onClick={() => onNavigate(next)}>{bookById[next.book].name} {next.chapter} →</button>}
         </nav>
+        {extra ? (
+          <p className="copyright">
+            {ENOCH_NOTE} Public domain; text from{' '}
+            <a href="https://en.wikisource.org/wiki/The_Book_of_Enoch_(Charles)" target="_blank" rel="noreferrer">Wikisource</a>, with Charles’s critical sigla (⌈ ⌉ †) removed for readability.
+          </p>
+        ) : (
         <p className="copyright">
           Scripture quotations are taken from the Holy Bible, New Living Translation, copyright © 1996, 2004, 2015 by Tyndale House Foundation. Used by permission of Tyndale House Publishers, Carol Stream, Illinois 60188. All rights reserved.
         </p>
+        )}
       </article>
 
       {range && state.status === 'ready' && (

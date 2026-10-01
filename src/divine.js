@@ -121,6 +121,25 @@ export const DIVINE = {
     ],
     keyRefs: ['Mark.14.36', 'Rom.8.15', 'Gal.4.6'],
   },
+  'div:atiq': {
+    name: 'Ancient of Days',
+    type: 'Divine title',
+    meaning: '“The Ancient of Days” — the eternal Judge enthroned (Dan 7:9)',
+    short: 'Daniel’s vision of God seated in judgment, with hair like wool and a throne of fire. The NLT renders it “the Ancient One”; 1 Enoch calls Him “the Head of Days.”',
+    forms: [
+      { orig: 'עַתִּיק יוֹמִין', lang: 'Aramaic', translit: 'at·tiq yo·min', strong: 'H6268', english: 'Ancient of Days' },
+      { orig: 'ርእሰ መዋዕል', lang: 'Geʽez', translit: 'rəʾsa mawāʿəl', english: 'Head of Days' },
+    ],
+    keyRefs: ['Dan.7.9-10', 'Dan.7.13', 'Dan.7.22', 'Enoch.46.1-2'],
+  },
+  'div:lordofspirits': {
+    name: 'Lord of Spirits',
+    type: 'Divine title (1 Enoch)',
+    meaning: '“Lord of the spirits” — ruler over every spirit in heaven and earth',
+    short: 'The most frequent name for God in the Parables of Enoch (1 Enoch 37–71), used over a hundred times. It echoes the biblical “LORD of Hosts” and “God of the spirits of all flesh” (Num 16:22).',
+    forms: [{ orig: 'እግዚአ መናፍስት', lang: 'Geʽez', translit: 'ʾƎgziʾa Manāfəst', english: 'Lord of Spirits' }],
+    keyRefs: ['Enoch.37.4', 'Enoch.39.12', 'Enoch.46.3', 'Num.16.22'],
+  },
   'div:sonofman': {
     name: 'Son of Man',
     type: 'Title of the Son',
@@ -137,6 +156,9 @@ export const DIVINE = {
 // Words in the NLT text that link to each entry. Longer phrases are matched first.
 export const DIVINE_WORDS = [
   ['Heaven’s Armies', 'div:sabaoth'],
+  ['Lord of Spirits', 'div:lordofspirits'],
+  ['Head of Days', 'div:atiq'],
+  ['Ancient One', 'div:atiq'],
   ['Holy Spirit', 'div:ruach'],
   ['Son of Man', 'div:sonofman'],
   ['Most High', 'div:elyon'],

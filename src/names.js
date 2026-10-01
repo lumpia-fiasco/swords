@@ -1,16 +1,17 @@
 // Proper-name data (STEPBible TIPNR, built by scripts/build-names.mjs) plus the curated divine names.
 import { DIVINE, DIVINE_WORDS } from './divine.js'
+import { ENOCH_ENTRIES } from './enoch.js'
 
 const idxCache = new Map()
 const entCache = new Map()
 
 function json(url) {
-  return fetch(url).then((r) => (r.ok ? r.json() : {}))
+  return fetch(url).then((r) => (r.ok ? r.json() : {})).catch(() => ({}))
 }
 
 function bookIndex(book) {
   if (!idxCache.has(book)) {
-    const p = json(`/names/idx/${book}.json`)
+    const p = json(book === 'Enoch' ? '/enoch/names.json' : `/names/idx/${book}.json`)
     p.catch(() => idxCache.delete(book))
     idxCache.set(book, p)
   }
@@ -28,6 +29,7 @@ export async function chapterNames(book, chapter) {
 
 export async function getEntry(id) {
   if (DIVINE[id]) return { id, kind: 'DIVINE', ...DIVINE[id] }
+  if (ENOCH_ENTRIES[id]) return { id, kind: 'OTHER', ...ENOCH_ENTRIES[id] }
   const bucket = id.slice(0, 3)
   if (!entCache.has(bucket)) {
     const p = json(`/names/ent/${bucket}.json`)

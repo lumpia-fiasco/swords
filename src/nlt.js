@@ -116,7 +116,38 @@ function plainText(verses) {
   })
 }
 
+// 1 Enoch isn't in the NLT; its chapters are prebuilt from R. H. Charles (scripts/build-enoch.mjs).
+const LOCAL = new Set(['Enoch'])
+const localCache = new Map()
+function localChapter(book, chapter) {
+  const key = `${book}.${chapter}`
+  if (!localCache.has(key)) {
+    const p = fetch(`/enoch/${chapter}.json`).then((r) => {
+      if (!r.ok) throw new Error(`Chapter not found`)
+      return r.json()
+    })
+    p.catch(() => localCache.delete(key))
+    localCache.set(key, p)
+  }
+  return localCache.get(key)
+}
+
+// Verse texts for a ref from a local chapter, in the same shape as plainText().
+async function localPassage(ref) {
+  const blocks = await localChapter(ref.book, ref.chapter)
+  const from = ref.verse ?? 1
+  const to = ref.endChapter && ref.endChapter !== ref.chapter ? Infinity : ref.endVerse ?? ref.verse ?? Infinity
+  const byVerse = new Map()
+  for (const b of blocks) {
+    for (const seg of b.type === 'para' ? b.segs : b.type === 'line' ? [b] : []) {
+      if (seg.verse >= from && seg.verse <= to) byVerse.set(seg.verse, [...(byVerse.get(seg.verse) ?? []), seg.html])
+    }
+  }
+  return [...byVerse].map(([verse, parts]) => ({ verse, html: parts.join(' ') }))
+}
+
 export async function getChapter(book, chapter) {
+  if (LOCAL.has(book)) return localChapter(book, chapter)
   const html = await get(`/api/passages?version=NLT&ref=${toOsis({ book, chapter }, true)}`)
   const [verses] = parseSections(html)
   if (!verses?.length) throw new Error('Chapter not found')
@@ -126,7 +157,9 @@ export async function getChapter(book, chapter) {
 /** Fetches many refs in one request. Returns Map<osis, [{verse, html}]>. */
 export async function getPassages(refs) {
   const out = new Map()
-  const list = refs.map((r) => (typeof r === 'string' ? parseOsis(r) : r))
+  const all = refs.map((r) => (typeof r === 'string' ? parseOsis(r) : r))
+  const list = all.filter((r) => !LOCAL.has(r.book))
+  await Promise.all(all.filter((r) => LOCAL.has(r.book)).map(async (r) => out.set(toOsis(r), await localPassage(r).catch(() => []))))
   // Keep URLs a sane length.
   for (let i = 0; i < list.length; i += 40) {
     const chunk = list.slice(i, i + 40)

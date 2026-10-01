@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "xrefs": "node scripts/build-xrefs.mjs",
-    "names": "node scripts/build-names.mjs"
+    "names": "node scripts/build-names.mjs",
+    "enoch": "node scripts/build-enoch.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",

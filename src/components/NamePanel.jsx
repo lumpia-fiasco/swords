@@ -29,10 +29,12 @@ const FAMILY = [
 const TYPE_LABEL = { PERSON: 'Person', PLACE: 'Place', 'PLACE+PERSON': 'Place & person', OTHER: 'Name', DIVINE: 'Name of God' }
 
 function Original({ form, primary }) {
-  const rtl = form.lang !== 'Greek'
+  const rtl = form.lang === 'Hebrew' || form.lang === 'Aramaic'
+  const script = rtl ? 'heb' : form.lang === 'Geʽez' ? 'eth' : 'grk'
+  const lang = { heb: 'he', eth: 'gez', grk: 'el' }[script]
   return (
     <div className={`orig ${primary ? 'primary' : ''}`}>
-      <span className={`orig-script ${rtl ? 'heb' : 'grk'}`} dir={rtl ? 'rtl' : 'ltr'} lang={rtl ? 'he' : 'el'}>{form.orig}</span>
+      <span className={`orig-script ${script}`} dir={rtl ? 'rtl' : 'ltr'} lang={lang}>{form.orig}</span>
       <span className="orig-meta">
         <span className="orig-lang">{form.lang}</span>
         {form.translit && <span className="orig-translit">{form.translit}</span>}
