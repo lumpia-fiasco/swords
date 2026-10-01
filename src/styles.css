@@ -684,7 +684,7 @@ button { cursor: pointer; }
 }
 .pat-search:focus { box-shadow: var(--shadow-2); }
 .pat-body { flex: 1; min-height: 0; display: grid; grid-template-columns: 300px minmax(0, 1fr); }
-.pat-list { overflow-y: auto; padding: 4px 10px 16px 14px; display: flex; flex-direction: column; gap: 4px; overscroll-behavior: contain; }
+.pat-list { position: relative; overflow-y: auto; padding: 4px 10px 16px 14px; display: flex; flex-direction: column; gap: 4px; overscroll-behavior: contain; }
 .pat-empty { padding: 8px; }
 .pat-item {
   display: flex;

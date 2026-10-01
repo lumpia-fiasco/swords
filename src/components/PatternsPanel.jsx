@@ -31,9 +31,14 @@ export default function PatternsPanel({ focus, onOpen, trayOpen, onToggleTray })
   const current = patternById[currentId] ?? PATTERNS[0]
   const listRef = useRef(null)
 
-  // Keep the selected pattern visible in the list (e.g. after reopening the tray).
+  // Keep the selected pattern visible in the list when the panel opens. Scroll only the list:
+  // scrollIntoView would also scroll the collapsed panel and shift its header out of place.
   useEffect(() => {
-    listRef.current?.querySelector('.pat-item.on')?.scrollIntoView({ block: 'nearest' })
+    const list = listRef.current
+    const item = list?.querySelector('.pat-item.on')
+    if (!trayOpen || !item) return
+    const top = item.offsetTop
+    if (top < list.scrollTop || top + item.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = top - 8
   }, [currentId, trayOpen, group])
 
   const list = useMemo(() => {
