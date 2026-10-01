@@ -34,10 +34,9 @@ export default function TopBar({ focus, onLookup, onOpenTopic, onNavigate, onTog
       </button>
       <a className="brand" href="#/John.3" onClick={onHome} aria-label="Mantles home">
         <svg className="brand-mark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          {/* A sword: blade with fuller, crossguard, grip, pommel. */}
-          <path d="M12 2l2 3v10h-4V5z" />
-          <path d="M12 6v7.5M7 15h10M12 15v4.5" />
-          <circle cx="12" cy="21" r="1.2" />
+          {/* A flame: the fire of the Spirit. */}
+          <path d="M12 2.5c.6 3.1 3.6 4.9 4.9 7.8 1.5 3.5.2 7.5-3.2 8.9-3.7 1.5-7.8-.6-8.4-4.4-.4-2.3.5-4.3 2-5.8.2 1.6 1 2.7 2.2 3.2C9.2 8.9 10.6 5.6 12 2.5Z" />
+          <path d="M12 13.2c1 1.1 2.1 2.1 2.1 3.6a2.1 2.1 0 0 1-4.2 0c0-1.5 1.1-2.5 2.1-3.6Z" />
         </svg>
         <span>Mantles</span>
         <span className="tag">NLT</span>
