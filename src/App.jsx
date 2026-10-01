@@ -102,7 +102,6 @@ export default function App() {
       <div className="scrim" onClick={() => setDrawerOpen(false)} />
       <Reader
         focus={focus}
-        selected={selected}
         onSelectVerse={selectVerse}
         onNavigate={(ref) => open(ref, { showRefs: false })}
         onName={(ids, nt) => setNameView({ ids, nt })}
