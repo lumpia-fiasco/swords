@@ -22,4 +22,4 @@ Then open http://localhost:5173.
 
 ## Deploying
 
-The NLT API doesn't send CORS headers, so production needs the same `/nlt` proxy that `vite.config.js` sets up for dev. A Netlify or Vercel rewrite, or a small edge function, can do this. It should append `key=$NLT_API_KEY` to each request.
+The site is deployed on Vercel. The NLT API doesn't send CORS headers, so `vercel.json` rewrites `/nlt/*` to the `api/nlt.js` serverless function. That function forwards the request to the API with the key attached and caches the responses on Vercel's CDN. In the Vercel project settings, set `NLT_API_KEY` under Environment Variables. Without it the function falls back to the shared `TEST` key.
