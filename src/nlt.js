@@ -49,6 +49,8 @@ function inline(node, opts = {}) {
       continue
     }
     const inner = inline(n, opts)
+    if (tag === 'td') { out += `${inner} `; continue }
+    if (tag === 'tr') { out += `${inner.trim()}; `; continue }
     if (cls === 'red') out += `<span class="red">${inner}</span>`
     else if (cls === 'sc' || cls === 'subhead-sc') out += `<span class="sc">${inner}</span>`
     else if (tag === 'em' || tag === 'i') out += `<em>${inner}</em>`
@@ -87,6 +89,22 @@ function toBlocks(verses) {
       if (/^h\d$/.test(tag) || HEADING_CLASSES.test(cls)) {
         para = null
         blocks.push({ type: 'heading', html: inline(n), kind: cls.includes('psa') ? 'note' : 'sub' })
+        continue
+      }
+      // Lists like Revelation 7:5–8 come as a table; render each row as a line.
+      if (tag === 'table') {
+        para = null
+        let rowVerse = verse
+        for (const tr of n.querySelectorAll('tr')) {
+          const vn = tr.querySelector('.vn')
+          if (vn) rowVerse = +vn.textContent
+          const cells = [...tr.querySelectorAll('td')].map((td) => inline(td)).filter((c) => c.trim())
+          if (!cells.length) continue
+          const k = `${chapter}.${rowVerse}`
+          const isFirst = !seen.has(k)
+          seen.add(k)
+          blocks.push({ type: 'line', chapter, verse: rowVerse, html: cells.map((c) => `<span class="cell">${c}</span>`).join(''), indent: 1, row: true, first: isFirst })
+        }
         continue
       }
       const html = inline(n)

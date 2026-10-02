@@ -573,6 +573,14 @@ button { cursor: pointer; }
 .family dt { font-size: 13px; color: var(--ink-3); padding-top: 5px; }
 .family dd, .ref-links { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .chip.static { box-shadow: none; background: var(--surface-2); color: var(--ink-2); cursor: default; }
+.text .poetry.table-row { position: relative; padding-left: 1.6em; text-indent: 0; }
+.text .table-row .vn { position: absolute; left: 0; top: 0.95em; }
+.text .cell { display: inline-block; min-width: 8.5em; }
+.text .cell:last-child { min-width: 0; }
+.num-title { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; font-variant-numeric: lining-nums; }
+.num-word { font-size: 18px; color: var(--ink-3); }
+.meaning.none p { color: var(--ink-2); font-size: 18px; }
+.nm.num { text-decoration-style: dotted; }
 .strongs { margin: 18px 0 0; font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 
 @media (max-width: 1279px) {

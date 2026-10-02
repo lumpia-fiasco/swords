@@ -133,6 +133,7 @@ export default function App() {
           onSelectVerse={selectVerse}
           onNavigate={(ref) => open(ref, { showRefs: false })}
           onName={(ids, nt) => setNameView({ ids, nt })}
+          onNumber={(number, word) => setNameView({ number, word })}
         />
         <NamePanel view={nameView} onClose={() => setNameView(null)} onOpen={(ref) => open(ref)} />
       </div>

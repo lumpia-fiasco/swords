@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getEntry } from '../names.js'
+import { numberEntry } from '../numbers.js'
 import { parseOsis, label } from '../ref.js'
 import { bookById } from '../books.js'
 
@@ -120,6 +121,35 @@ function Entry({ entry, nt, onPick, onOpen }) {
   )
 }
 
+function NumberEntry({ value, word, onOpen }) {
+  const e = numberEntry(value)
+  return (
+    <article className="name-entry">
+      <h2 className="name-title num-title">
+        {value.toLocaleString()}
+        {word && word.replace(/,/g, '') !== String(value) && <span className="num-word">{word.toLowerCase()}</span>}
+      </h2>
+      {e.hebrew && <Original primary form={{ ...e.hebrew, lang: 'Hebrew' }} />}
+      <div className={`meaning ${e.none ? 'none' : ''}`}>
+        <span className="meaning-label">Biblical meaning</span>
+        <p>{e.meaning}</p>
+      </div>
+      <p className="name-desc">{e.short}</p>
+      {e.keyRefs && (
+        <section className="name-section">
+          <h3>Key passages</h3>
+          <div className="ref-links">
+            {e.keyRefs.map((r) => <button key={r} className="chip" onClick={() => onOpen(parseOsis(r))}>{label(parseOsis(r))}</button>)}
+          </div>
+        </section>
+      )}
+      <p className="attribution">
+        Numbers in Scripture are first literal counts. These meanings are patterns drawn from the passages above, not a code; where Scripture gives no clear pattern, that is stated.
+      </p>
+    </article>
+  )
+}
+
 export default function NamePanel({ view, onClose, onOpen }) {
   // A small history so family links can be followed and retraced.
   const [stack, setStack] = useState([])
@@ -127,7 +157,7 @@ export default function NamePanel({ view, onClose, onOpen }) {
   const current = stack.at(-1)
 
   useEffect(() => {
-    setStack(view ? [view.ids] : [])
+    setStack(view?.ids ? [view.ids] : [])
   }, [view])
 
   useEffect(() => {
@@ -138,6 +168,19 @@ export default function NamePanel({ view, onClose, onOpen }) {
   }, [current])
 
   if (!view) return null
+  if (view.number) {
+    return (
+      <aside className="name-panel" aria-label="Number details">
+        <div className="name-panel-bar">
+          <span className="name-panel-label">Number</span>
+          <button className="icon-btn" onClick={onClose} aria-label="Close number details">✕</button>
+        </div>
+        <div className="name-panel-body">
+          <NumberEntry key={view.number} value={view.number} word={view.word} onOpen={onOpen} />
+        </div>
+      </aside>
+    )
+  }
   const nt = view.nt
   return (
     <aside className="name-panel" aria-label="Name details">

@@ -2,6 +2,7 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { getChapter } from '../nlt.js'
 import { versesWithRefs } from '../xref.js'
 import { chapterNames, linkNames } from '../names.js'
+import { linkNumbers } from '../numbers.js'
 import { bookById, BOOKS } from '../books.js'
 import { containsVerse, label } from '../ref.js'
 import { ENOCH_NOTE } from '../enoch.js'
@@ -37,7 +38,7 @@ function neighbor(book, chapter, dir) {
   return { book: shelf[i].id, chapter: dir > 0 ? 1 : shelf[i].chapters }
 }
 
-export default function Reader({ focus, onSelectVerse, onNavigate, onName }) {
+export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNumber }) {
   const { book, chapter } = focus
   const [state, setState] = useState({ status: 'loading', blocks: [] })
   const [hasRefs, setHasRefs] = useState(new Set())
@@ -133,15 +134,21 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName }) {
       title: 'Show cross-references',
     }
   }
-  // A tapped name opens its details instead of selecting the verse.
+  // A tapped name or number opens its details instead of selecting the verse.
   const openName = (e) => {
+    const num = e.target.closest?.('[data-num]')
+    if (num) {
+      e.stopPropagation()
+      onNumber(+num.dataset.num, num.dataset.word)
+      return true
+    }
     const el = e.target.closest?.('[data-nm]')
     if (!el) return false
     e.stopPropagation()
     onName(el.dataset.nm.split(','), bookById[book].testament === 'NT')
     return true
   }
-  const linked = (html, v) => ({ __html: linkNames(html, names.get(v)) })
+  const linked = (html, v) => ({ __html: linkNumbers(linkNames(html, names.get(v))) })
   const num = (v, first) => first && <sup className={`vn ${hasRefs.has(v) ? 'has-refs' : ''}`}>{v}</sup>
 
   return (
@@ -150,7 +157,7 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName }) {
         <header className="chapter-head">
           <p className="eyebrow">{extra ? 'R. H. Charles translation · 1917' : 'New Living Translation'}</p>
           <h1>{name} <span>{chapter}</span></h1>
-          <p className="hint">Tap a verse for cross-references and copying, or a name for its Hebrew meaning.</p>
+          <p className="hint">Tap a verse for cross-references and copying, or a name or number for its meaning.</p>
         </header>
         {extra && chapter === 1 && <p className="canon-note"><strong>About this book.</strong> {ENOCH_NOTE}</p>}
 
@@ -172,7 +179,7 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName }) {
               if (b.type === 'heading') return <h2 key={i} className={`subhead ${b.kind}`} dangerouslySetInnerHTML={{ __html: b.html }} />
               if (b.type === 'line')
                 return (
-                  <p key={i} className={`poetry indent-${b.indent}`}>
+                  <p key={i} className={`poetry indent-${b.indent} ${b.row ? 'table-row' : ''}`}>
                     <span {...verseProps(b.verse, b.first)}>
                       {num(b.verse, b.first)}
                       <span dangerouslySetInnerHTML={linked(b.html, b.verse)} />

@@ -146,7 +146,7 @@ export const TOPICS = [
   {
     id: 'authority',
     title: 'Authority & Spiritual Warfare',
-    keywords: ['authority', 'spiritual warfare', 'warfare', 'armor', 'armor of god', 'enemy', 'devil', 'satan', 'bind', 'loose', 'weapons'],
+    keywords: ['authority', 'spiritual warfare', 'warfare', 'enemy', 'devil', 'satan', 'bind', 'loose', 'weapons'],
     blurb: "The believer's authority in Christ and the weapons of our warfare.",
     sections: [
       { heading: 'Authority given to believers', refs: ['Luke.10.19', 'Luke.9.1', 'Matt.28.18-19', 'Matt.16.19', 'Matt.18.18', 'Mark.16.17'] },
@@ -154,6 +154,23 @@ export const TOPICS = [
       { heading: 'The armor of God', refs: ['Eph.6.10-12', 'Eph.6.13-17', 'Eph.6.18'] },
       { heading: 'Weapons of our warfare', refs: ['2Cor.10.3-5', 'Heb.4.12', 'Rev.12.11', 'Isa.54.17', '1John.4.4'] },
       { heading: 'Resist the enemy', refs: ['Jas.4.7', '1Pet.5.8-9', 'Eph.4.27', '2Cor.2.11', 'Matt.4.10'] },
+    ],
+  },
+  {
+    id: 'armor',
+    title: 'The Armor of God',
+    keywords: ['armor of god', 'armor', 'armour', 'whole armor', 'full armor', 'belt of truth', 'breastplate', 'breastplate of righteousness', 'shoes of peace', 'gospel of peace', 'shield of faith', 'helmet of salvation', 'sword of the spirit', 'stand firm'],
+    blurb: 'Be strong in the Lord and in His mighty power. Each piece is something God Himself wears and gives (Isa 59:17), so we stand in His strength, not ours.',
+    sections: [
+      { heading: 'Put on all of God’s armor', refs: ['Eph.6.10-13', 'Rom.13.12', '2Cor.6.7', '2Cor.10.3-5'] },
+      { heading: 'The belt of truth', refs: ['Eph.6.14', 'Isa.11.5', 'John.8.32', 'John.14.6', 'John.17.17'] },
+      { heading: 'The breastplate of righteousness', refs: ['Eph.6.14', 'Isa.59.17', '2Cor.5.21', 'Phil.3.9', '1Thess.5.8'] },
+      { heading: 'Shoes of the Good News of peace', refs: ['Eph.6.15', 'Isa.52.7', 'Rom.10.15', 'Rom.16.20'] },
+      { heading: 'The shield of faith', refs: ['Eph.6.16', 'Gen.15.1', 'Ps.91.4', 'Prov.30.5', '1John.5.4'] },
+      { heading: 'The helmet of salvation', refs: ['Eph.6.17', 'Isa.59.17', '1Thess.5.8', 'Rom.12.2', '2Cor.10.5'] },
+      { heading: 'The sword of the Spirit, the word of God', refs: ['Eph.6.17', 'Heb.4.12', 'Matt.4.4', 'Isa.49.2', 'Rev.1.16'] },
+      { heading: 'Pray in the Spirit at all times', refs: ['Eph.6.18', 'Jude.1.20', '1Thess.5.17', 'Col.4.2'] },
+      { heading: 'The LORD our armor', refs: ['Ps.3.3', 'Ps.18.2', 'Ps.144.1-2', '2Sam.22.31-35', 'Isa.59.16-17'] },
     ],
   },
   {
@@ -182,6 +199,25 @@ export const TOPICS = [
       { heading: 'Overcome evil with good', refs: ['Rom.12.21', 'Gen.50.20', 'Jas.4.7', 'Eph.6.10-11', '1Pet.5.8-10'] },
       { heading: 'The wicked will not last', refs: ['Ps.37.1-2', 'Ps.37.10-11', 'Ps.92.7', 'Prov.24.19-20', 'Mal.4.1-3'] },
       { heading: 'The final victory', refs: ['Rev.20.10', 'Rev.20.14', 'Rev.21.3-4', 'Rev.22.3', '1Cor.15.24-26', 'Rev.11.15'] },
+    ],
+  },
+  {
+    id: 'blood',
+    title: 'The Importance of Blood',
+    keywords: ['blood', 'importance of blood', 'the blood', 'blood of jesus', 'blood of christ', 'blood of the lamb', 'blood covenant', 'life is in the blood', 'plead the blood', 'covered by the blood', 'atonement'],
+    blurb: 'The life is in the blood. From Abel to the Passover to the cross, Scripture traces how blood atones, protects, cleanses, redeems and speaks.',
+    sections: [
+      { heading: 'The life is in the blood', refs: ['Lev.17.11', 'Lev.17.14', 'Gen.9.4', 'Deut.12.23'] },
+      { heading: 'Blood that cries out', refs: ['Gen.4.10', 'Matt.23.35', 'Heb.12.24'] },
+      { heading: 'The blood of the covenant', refs: ['Exod.24.6-8', 'Heb.9.18-20', 'Matt.26.27-28', 'Heb.13.20'] },
+      { heading: 'Passover: blood that protects', refs: ['Exod.12.7', 'Exod.12.13', 'Exod.12.22-23', '1Cor.5.7'] },
+      { heading: 'Atonement: blood on the mercy seat', refs: ['Lev.16.14-15', 'Heb.9.12', 'Heb.9.22', 'Rom.3.25'] },
+      { heading: 'Redeemed by His blood', refs: ['Eph.1.7', '1Pet.1.18-19', 'Acts.20.28', 'Rev.5.9', 'Col.1.20'] },
+      { heading: 'Cleansed and forgiven', refs: ['Isa.1.18', '1John.1.7', 'Heb.9.14', 'Rev.1.5', 'Rev.7.14'] },
+      { heading: 'Justified and brought near', refs: ['Rom.5.9', 'Eph.2.13', 'Heb.10.19-22', 'Heb.13.12'] },
+      { heading: 'Overcoming by the blood', refs: ['Rev.12.11', 'Exod.12.23', 'Josh.2.18'] },
+      { heading: 'Water and blood', refs: ['John.19.34', '1John.5.6-8'] },
+      { heading: 'Remember His blood', refs: ['Luke.22.20', '1Cor.10.16', '1Cor.11.25-26', 'John.6.53-56'] },
     ],
   },
   {
@@ -228,7 +264,7 @@ export const TOPICS = [
   {
     id: 'name-blood',
     title: 'The Name & the Blood',
-    keywords: ['name of jesus', 'blood', 'name', 'blood of jesus', 'atonement', 'covering', 'plead the blood'],
+    keywords: ['name of jesus', 'name', 'names of jesus', 'in jesus name'],
     blurb: 'The power of the Name of Jesus and the blood of the Lamb.',
     sections: [
       { heading: 'The Name above every name', refs: ['Phil.2.9-11', 'Acts.4.12', 'Prov.18.10', 'Col.3.17'] },
