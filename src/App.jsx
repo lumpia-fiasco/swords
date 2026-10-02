@@ -78,6 +78,8 @@ export default function App() {
 
   const selectVerse = useCallback((v) => {
     setSelected(v)
+    // Deselecting leaves the sidebar where it is.
+    if (!v) return
     setPanel((p) => ({ ...p, tab: 'xref' }))
     if (matchMedia('(max-width: 900px)').matches) setDrawerOpen(true)
   }, [])

@@ -48,6 +48,8 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNum
   const [range, setRange] = useState(null)
   const [extending, setExtending] = useState(false)
   const [copied, setCopied] = useState(false)
+  // The opened-from-link highlight goes away once the selection is toggled off.
+  const [focusDismissed, setFocusDismissed] = useState(false)
 
   useEffect(() => {
     let live = true
@@ -64,17 +66,27 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNum
   // A verse (or range) opened by link or lookup starts out selected.
   useEffect(() => {
     setExtending(false)
+    setFocusDismissed(false)
     setRange(focus.verse ? { anchor: focus.verse, from: focus.verse, to: focus.endVerse ?? focus.verse } : null)
   }, [focus])
 
   useEffect(() => {
     if (!range) return
-    const onKey = (e) => e.key === 'Escape' && (setRange(null), setExtending(false))
+    const onKey = (e) => e.key === 'Escape' && clearSelection()
     addEventListener('keydown', onKey)
     return () => removeEventListener('keydown', onKey)
   }, [range])
 
+  const clearSelection = () => {
+    setRange(null)
+    setExtending(false)
+    setFocusDismissed(true)
+    onSelectVerse(null)
+  }
+
   const pick = (v, extend) => {
+    // Tapping an already-selected verse clears the selection (a toggle).
+    if (!extend && range && v >= range.from && v <= range.to) return clearSelection()
     if (extend && range) {
       setRange({ anchor: range.anchor, from: Math.min(range.anchor, v), to: Math.max(range.anchor, v) })
       setExtending(false)
@@ -113,7 +125,7 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNum
   const extra = bookById[book]?.testament === 'EXTRA'
 
   const verseProps = (v, first) => {
-    const isFocus = containsVerse(focus, chapter, v)
+    const isFocus = !focusDismissed && containsVerse(focus, chapter, v)
     const isSel = range && v >= range.from && v <= range.to
     return {
       'data-v': first ? v : undefined,
@@ -227,7 +239,7 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNum
             {extending ? 'Tap a verse…' : 'Select more'}
           </button>
           <button className="selbar-btn primary" onClick={copy}>{copied ? 'Copied ✓' : 'Copy'}</button>
-          <button className="selbar-close" onClick={() => { setRange(null); setExtending(false) }} aria-label="Clear selection">✕</button>
+          <button className="selbar-close" onClick={clearSelection} aria-label="Clear selection">✕</button>
         </div>
       )}
     </main>
