@@ -22,7 +22,66 @@ function RefButton({ osis, focus, onOpen }) {
   )
 }
 
-export default function PatternsPanel({ focus, onOpen, trayOpen, onToggleTray }) {
+const MIN_H = 140
+const maxH = () => innerHeight - 60 - 72 // leave the top bar and some reading room
+const clamp = (h) => Math.max(MIN_H, Math.min(maxH(), h))
+
+// Drag (or arrow-key) handle on the panel's top edge. Double-click resets the height.
+function Resizer({ panelRef, onResize, onResizeEnd, onResizing, onCollapse }) {
+  const start = (e) => {
+    if (e.button !== 0) return
+    e.preventDefault()
+    const startY = e.clientY
+    const startH = panelRef.current.getBoundingClientRect().height
+    let h = startH
+    let raw = startH
+    onResizing(true)
+    const move = (ev) => {
+      raw = startH + (startY - ev.clientY)
+      h = clamp(raw)
+      onResize(h)
+    }
+    const up = () => {
+      removeEventListener('pointermove', move)
+      removeEventListener('pointerup', up)
+      removeEventListener('pointercancel', up)
+      onResizing(false)
+      // Dragging well below the minimum collapses the panel; keep the last good height.
+      if (raw < MIN_H - 60) {
+        onResizeEnd(startH)
+        onCollapse()
+      } else onResizeEnd(h)
+    }
+    addEventListener('pointermove', move)
+    addEventListener('pointerup', up)
+    addEventListener('pointercancel', up)
+  }
+  const key = (e) => {
+    const h = panelRef.current.getBoundingClientRect().height
+    const next = { ArrowUp: h + 32, ArrowDown: h - 32, Home: MIN_H, End: maxH() }[e.key]
+    if (next === undefined) return
+    e.preventDefault()
+    onResizeEnd(clamp(next))
+  }
+  return (
+    <div
+      className="pat-resizer"
+      role="separator"
+      aria-orientation="horizontal"
+      aria-label="Resize patterns panel"
+      tabIndex={0}
+      title="Drag to resize · double-click to reset"
+      onPointerDown={start}
+      onKeyDown={key}
+      onDoubleClick={() => onResizeEnd(null)}
+    >
+      <span className="pat-grip" />
+    </div>
+  )
+}
+
+export default function PatternsPanel({ focus, onOpen, trayOpen, onToggleTray, onResize, onResizeEnd, onResizing }) {
+  const panelRef = useRef(null)
   const [group, setGroup] = useState('All')
   const [query, setQuery] = useState('')
   const [currentId, setCurrentId] = useState(remembered)
@@ -58,7 +117,10 @@ export default function PatternsPanel({ focus, onOpen, trayOpen, onToggleTray })
   }
 
   return (
-    <section className={`patterns ${trayOpen ? 'tray-open' : ''} ${showDetail ? 'show-detail' : ''}`} aria-label="Patterns in Scripture">
+    <section ref={panelRef} className={`patterns ${trayOpen ? 'tray-open' : ''} ${showDetail ? 'show-detail' : ''}`} aria-label="Patterns in Scripture">
+      {trayOpen && (
+        <Resizer panelRef={panelRef} onResize={onResize} onResizeEnd={onResizeEnd} onResizing={onResizing} onCollapse={() => onToggleTray(false)} />
+      )}
       <header className="pat-head">
         <button className="pat-handle" onClick={() => onToggleTray(!trayOpen)} aria-expanded={trayOpen}>
           <span className="pat-title">Patterns</span>

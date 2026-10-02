@@ -56,7 +56,8 @@ button { cursor: pointer; }
   grid-template-columns: minmax(0, 1fr);
   transition: grid-template-rows 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.app.tray-open { --pat-h: 33vh; }
+.app.tray-open { --pat-h: min(var(--pat-open-h, 33vh), calc(100vh - var(--topbar) - 72px)); }
+.app.resizing { transition: none; user-select: none; cursor: ns-resize; }
 .workspace { display: flex; min-height: 0; min-width: 0; position: relative; }
 .sidebar { width: var(--sidebar); flex: none; }
 .reader { flex: 1; min-width: 0; }
@@ -633,6 +634,21 @@ button { cursor: pointer; }
   position: relative;
   z-index: 15;
 }
+.pat-resizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  cursor: ns-resize;
+  touch-action: none;
+}
+.pat-grip { width: 40px; height: 4px; border-radius: 99px; background: var(--line); transition: background 0.15s, width 0.15s; }
+.pat-resizer:hover .pat-grip, .pat-resizer:focus-visible .pat-grip, .app.resizing .pat-grip { background: var(--accent); width: 56px; }
+.pat-resizer:focus-visible { outline: none; }
 .pat-head { display: flex; align-items: center; gap: 14px; padding: 10px 16px 8px; flex: none; min-width: 0; }
 .pat-handle { display: flex; align-items: baseline; gap: 10px; flex: 1; padding: 4px 0; border: 0; background: none; cursor: pointer; text-align: left; min-width: 0; }
 .app.tray-open .pat-handle { flex: none; }
@@ -743,7 +759,8 @@ button { cursor: pointer; }
     transition: height 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
     overflow: hidden;
   }
-  .app.tray-open .patterns { height: min(78vh, calc(100vh - var(--topbar) - 12px)); }
+  .app.tray-open .patterns { height: min(var(--pat-open-h, 78vh), calc(100vh - var(--topbar) - 12px)); }
+  .app.resizing .patterns { transition: none; }
   .app.tray-open .pat-sub.docked { display: none; }
 }
 

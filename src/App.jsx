@@ -33,6 +33,21 @@ export default function App() {
   const [navCollapsed, setNavCollapsed] = useState(false)
   // Short windows show Patterns as a tray from the bottom.
   const [trayOpen, setTrayOpen] = useState(false)
+  // Height the Patterns panel was dragged to (px), remembered between visits; null = default.
+  const [patHeight, setPatHeight] = useState(() => {
+    try {
+      return +localStorage.getItem('patternsHeight') || null
+    } catch {
+      return null
+    }
+  })
+  const [resizing, setResizing] = useState(false)
+  const savePatHeight = useCallback((h) => {
+    setPatHeight(h)
+    try {
+      h ? localStorage.setItem('patternsHeight', String(Math.round(h))) : localStorage.removeItem('patternsHeight')
+    } catch {}
+  }, [])
   // Name tapped in the reader: { ids, nt } shown in the right panel.
   const [nameView, setNameView] = useState(null)
   // Hash the app set itself, so in-app navigation isn't mistaken for a followed link.
@@ -88,7 +103,10 @@ export default function App() {
   )
 
   return (
-    <div className={`app ${drawerOpen ? 'drawer-open' : ''} ${nameView ? 'names-open' : ''} ${navCollapsed ? 'nav-collapsed' : ''} ${trayOpen ? 'tray-open' : ''}`}>
+    <div
+      className={`app ${drawerOpen ? 'drawer-open' : ''} ${nameView ? 'names-open' : ''} ${navCollapsed ? 'nav-collapsed' : ''} ${trayOpen ? 'tray-open' : ''} ${resizing ? 'resizing' : ''}`}
+      style={patHeight ? { '--pat-open-h': `${patHeight}px` } : undefined}
+    >
       <TopBar
         focus={focus}
         onLookup={lookup}
@@ -122,6 +140,9 @@ export default function App() {
         focus={focus}
         trayOpen={trayOpen}
         onToggleTray={setTrayOpen}
+        onResize={setPatHeight}
+        onResizeEnd={savePatHeight}
+        onResizing={setResizing}
         onOpen={(ref) => {
           open(ref)
           // In tray mode, get out of the way so the passage is visible.
