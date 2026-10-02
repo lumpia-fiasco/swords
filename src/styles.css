@@ -25,6 +25,9 @@
   --topbar: 60px;
   --sidebar: 400px;
   --names: 380px;
+  /* One motion for every panel (sidebar, names, patterns). */
+  --panel-dur: 0.28s;
+  --panel-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --hebrew: 'Noto Serif Hebrew', 'SBL Hebrew', 'Times New Roman', serif;
   --greek: 'Noto Serif', 'Old Standard TT', Georgia, serif;
 }
@@ -54,7 +57,7 @@ button { cursor: pointer; }
   display: grid;
   grid-template-rows: var(--topbar) minmax(0, 1fr) var(--pat-h);
   grid-template-columns: minmax(0, 1fr);
-  transition: grid-template-rows 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: grid-template-rows var(--panel-dur) var(--panel-ease);
 }
 .app.tray-open { --pat-h: min(var(--pat-open-h, 33vh), calc(100vh - var(--topbar) - 72px)); }
 .app.resizing { transition: none; user-select: none; cursor: ns-resize; }
@@ -62,7 +65,23 @@ button { cursor: pointer; }
 .sidebar { width: var(--sidebar); flex: none; }
 .reader { flex: 1; min-width: 0; }
 .name-panel { width: var(--names); flex: none; }
-.app.nav-collapsed .sidebar { display: none; }
+
+/* Side panels slide by animating width; their contents keep a fixed width so text
+   doesn't reflow mid-slide, and fade as the panel closes. */
+.sidebar, .name-panel {
+  overflow: hidden;
+  transition: width var(--panel-dur) var(--panel-ease), box-shadow var(--panel-dur) var(--panel-ease), visibility 0s;
+}
+.sidebar > *, .name-panel-inner { transition: opacity 0.2s ease, translate var(--panel-dur) var(--panel-ease); }
+.sidebar > * { min-width: var(--sidebar); }
+.app.nav-collapsed .sidebar, .name-panel:not(.open) {
+  width: 0;
+  box-shadow: none;
+  visibility: hidden;
+  transition: width var(--panel-dur) var(--panel-ease), box-shadow var(--panel-dur) var(--panel-ease), visibility 0s linear var(--panel-dur);
+}
+.app.nav-collapsed .sidebar > * { opacity: 0; translate: -16px 0; }
+.name-panel:not(.open) .name-panel-inner { opacity: 0; translate: 16px 0; }
 .scrim { display: none; }
 
 /* ---------- Top bar ---------- */
@@ -525,13 +544,13 @@ button { cursor: pointer; }
 
 .name-panel {
   display: flex;
-  flex-direction: column;
   min-height: 0;
   background: var(--surface);
   box-shadow: var(--shadow-2);
   position: relative;
   z-index: 10;
 }
+.name-panel-inner { width: var(--names); flex: none; display: flex; flex-direction: column; min-height: 0; }
 .name-panel-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 0 18px; min-height: 52px; }
 .name-panel-bar .back { margin: 0; }
 .name-panel-label { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
@@ -584,16 +603,24 @@ button { cursor: pointer; }
 .strongs { margin: 18px 0 0; font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 
 @media (max-width: 1279px) {
-  .name-panel {
+  /* Narrower windows: the name panel slides over the text from the right. */
+  .name-panel, .name-panel:not(.open) {
     position: fixed;
     inset: var(--topbar) 0 var(--pat-h) auto;
     width: min(var(--names), 92vw);
     z-index: 40;
-    box-shadow: var(--shadow-3);
-    animation: slide-in 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
+  .name-panel {
+    box-shadow: var(--shadow-3);
+    transition: translate var(--panel-dur) var(--panel-ease), box-shadow var(--panel-dur) var(--panel-ease), visibility 0s;
+  }
+  .name-panel:not(.open) {
+    translate: 100% 0;
+    transition: translate var(--panel-dur) var(--panel-ease), box-shadow var(--panel-dur) var(--panel-ease), visibility 0s linear var(--panel-dur);
+  }
+  .name-panel-inner { width: 100%; }
+  .name-panel:not(.open) .name-panel-inner { translate: 0 0; }
 }
-@keyframes slide-in { from { translate: 100% 0; } }
 
 /* ---------- Books ---------- */
 .shelf + .shelf { margin-top: 22px; }
@@ -764,7 +791,7 @@ button { cursor: pointer; }
     height: var(--pat-h);
     z-index: 45;
     border-radius: 16px 16px 0 0;
-    transition: height 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: height var(--panel-dur) var(--panel-ease);
     overflow: hidden;
   }
   .app.tray-open .patterns { height: min(var(--pat-open-h, 78vh), calc(100vh - var(--topbar) - 12px)); }
@@ -791,17 +818,19 @@ button { cursor: pointer; }
   .topbar { gap: 8px; padding: 0 12px; flex-wrap: nowrap; }
   .brand span:not(.tag), .brand .tag { display: none; }
   .close-btn { display: grid; }
-  .app.nav-collapsed .sidebar { display: flex; }
-  .sidebar {
+  /* Phones: the sidebar is a drawer; the desktop collapse doesn't apply. */
+  .sidebar, .app.nav-collapsed .sidebar {
     position: fixed;
     inset: var(--topbar) auto var(--pat-h) 0;
     width: min(420px, 92vw);
     z-index: 30;
     translate: -100% 0;
-    transition: translate 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-    box-shadow: var(--shadow-3);
+    visibility: visible;
+    transition: translate var(--panel-dur) var(--panel-ease), box-shadow var(--panel-dur) var(--panel-ease);
+    box-shadow: none;
   }
-  .drawer-open .sidebar { translate: 0 0; }
+  .sidebar > *, .app.nav-collapsed .sidebar > * { min-width: 0; opacity: 1; translate: 0 0; }
+  .drawer-open .sidebar, .app.drawer-open.nav-collapsed .sidebar { translate: 0 0; box-shadow: var(--shadow-3); }
   .scrim {
     display: block;
     position: fixed;
@@ -810,7 +839,7 @@ button { cursor: pointer; }
     z-index: 25;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s;
+    transition: opacity var(--panel-dur) var(--panel-ease);
   }
   .drawer-open .scrim { opacity: 1; pointer-events: auto; }
   .page { padding: 28px 16px 64px; }

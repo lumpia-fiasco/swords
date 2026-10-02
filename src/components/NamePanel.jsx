@@ -151,6 +151,14 @@ function NumberEntry({ value, word, onOpen }) {
 }
 
 export default function NamePanel({ view, onClose, onOpen }) {
+  // The panel stays mounted so it can slide in and out. While it slides away it keeps showing
+  // what it last showed, rather than going blank.
+  const open = !!view
+  const [shown, setShown] = useState(view)
+  useEffect(() => {
+    if (view) setShown(view)
+  }, [view])
+
   // A small history so family links can be followed and retraced.
   const [stack, setStack] = useState([])
   const [entries, setEntries] = useState(null)
@@ -160,7 +168,7 @@ export default function NamePanel({ view, onClose, onOpen }) {
   // Close on a click anywhere outside the panel, or on Escape. Clicking another name or
   // number isn't "outside": the reader swaps the panel's contents instead.
   useEffect(() => {
-    if (!view) return
+    if (!open) return
     const onDown = (e) => {
       if (panelRef.current?.contains(e.target)) return
       if (e.target.closest?.('[data-nm], [data-num]')) return
@@ -173,11 +181,11 @@ export default function NamePanel({ view, onClose, onOpen }) {
       document.removeEventListener('pointerdown', onDown, true)
       document.removeEventListener('keydown', onKey)
     }
-  }, [view, onClose])
+  }, [open, onClose])
 
   useEffect(() => {
-    setStack(view?.ids ? [view.ids] : [])
-  }, [view])
+    setStack(shown?.ids ? [shown.ids] : [])
+  }, [shown])
 
   useEffect(() => {
     let live = true
@@ -186,42 +194,44 @@ export default function NamePanel({ view, onClose, onOpen }) {
     return () => { live = false }
   }, [current])
 
-  if (!view) return null
-  if (view.number) {
-    return (
-      <aside className="name-panel" aria-label="Number details" ref={panelRef}>
+  const isNumber = !!shown?.number
+  return (
+    <aside
+      ref={panelRef}
+      className={`name-panel ${open ? 'open' : ''}`}
+      aria-label={isNumber ? 'Number details' : 'Name details'}
+      aria-hidden={!open}
+      inert={!open}
+    >
+      <div className="name-panel-inner">
         <div className="name-panel-bar">
-          <span className="name-panel-label">Number</span>
-          <button className="icon-btn" onClick={onClose} aria-label="Close number details">✕</button>
+          {!isNumber && stack.length > 1 ? (
+            <button className="back" onClick={() => setStack((s) => s.slice(0, -1))}>← Back</button>
+          ) : (
+            <span className="name-panel-label">{isNumber ? 'Number' : 'Name'}</span>
+          )}
+          <button className="icon-btn" onClick={onClose} aria-label="Close details">✕</button>
         </div>
         <div className="name-panel-body">
-          <NumberEntry key={view.number} value={view.number} word={view.word} onOpen={onOpen} />
+          {isNumber ? (
+            <NumberEntry key={shown.number} value={shown.number} word={shown.word} onOpen={onOpen} />
+          ) : (
+            shown && (
+              <>
+                {!entries && <p className="muted">Loading…</p>}
+                {entries?.length === 0 && <p className="muted">No details found for this name.</p>}
+                {entries?.map((e, i) => (
+                  <Entry key={e.id + i} entry={e} nt={shown.nt} onPick={(ids) => setStack((s) => [...s, ids])} onOpen={onOpen} />
+                ))}
+                <p className="attribution">
+                  Names, original forms and meanings from{' '}
+                  <a href="https://github.com/STEPBible/STEPBible-Data" target="_blank" rel="noreferrer">STEPBible.org</a>{' '}
+                  (Tyndale House Cambridge), CC BY 4.0.
+                </p>
+              </>
+            )
+          )}
         </div>
-      </aside>
-    )
-  }
-  const nt = view.nt
-  return (
-    <aside className="name-panel" aria-label="Name details" ref={panelRef}>
-      <div className="name-panel-bar">
-        {stack.length > 1 ? (
-          <button className="back" onClick={() => setStack((s) => s.slice(0, -1))}>← Back</button>
-        ) : (
-          <span className="name-panel-label">Name</span>
-        )}
-        <button className="icon-btn" onClick={onClose} aria-label="Close name details">✕</button>
-      </div>
-      <div className="name-panel-body">
-        {!entries && <p className="muted">Loading…</p>}
-        {entries?.length === 0 && <p className="muted">No details found for this name.</p>}
-        {entries?.map((e, i) => (
-          <Entry key={e.id + i} entry={e} nt={nt} onPick={(ids) => setStack((s) => [...s, ids])} onOpen={onOpen} />
-        ))}
-        <p className="attribution">
-          Names, original forms and meanings from{' '}
-          <a href="https://github.com/STEPBible/STEPBible-Data" target="_blank" rel="noreferrer">STEPBible.org</a>{' '}
-          (Tyndale House Cambridge), CC BY 4.0.
-        </p>
       </div>
     </aside>
   )
