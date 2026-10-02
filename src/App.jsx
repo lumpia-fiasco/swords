@@ -74,6 +74,8 @@ export default function App() {
     setDrawerOpen(false)
   }, [])
 
+  const closeNames = useCallback(() => setNameView(null), [])
+
   const selectVerse = useCallback((v) => {
     setSelected(v)
     setPanel((p) => ({ ...p, tab: 'xref' }))
@@ -135,7 +137,7 @@ export default function App() {
           onName={(ids, nt) => setNameView({ ids, nt })}
           onNumber={(number, word) => setNameView({ number, word })}
         />
-        <NamePanel view={nameView} onClose={() => setNameView(null)} onOpen={(ref) => open(ref)} />
+        <NamePanel view={nameView} onClose={closeNames} onOpen={(ref) => open(ref)} />
       </div>
       <PatternsPanel
         focus={focus}

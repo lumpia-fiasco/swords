@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getEntry } from '../names.js'
 import { numberEntry } from '../numbers.js'
 import { parseOsis, label } from '../ref.js'
@@ -155,6 +155,25 @@ export default function NamePanel({ view, onClose, onOpen }) {
   const [stack, setStack] = useState([])
   const [entries, setEntries] = useState(null)
   const current = stack.at(-1)
+  const panelRef = useRef(null)
+
+  // Close on a click anywhere outside the panel, or on Escape. Clicking another name or
+  // number isn't "outside": the reader swaps the panel's contents instead.
+  useEffect(() => {
+    if (!view) return
+    const onDown = (e) => {
+      if (panelRef.current?.contains(e.target)) return
+      if (e.target.closest?.('[data-nm], [data-num]')) return
+      onClose()
+    }
+    const onKey = (e) => e.key === 'Escape' && onClose()
+    document.addEventListener('pointerdown', onDown, true)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', onDown, true)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [view, onClose])
 
   useEffect(() => {
     setStack(view?.ids ? [view.ids] : [])
@@ -170,7 +189,7 @@ export default function NamePanel({ view, onClose, onOpen }) {
   if (!view) return null
   if (view.number) {
     return (
-      <aside className="name-panel" aria-label="Number details">
+      <aside className="name-panel" aria-label="Number details" ref={panelRef}>
         <div className="name-panel-bar">
           <span className="name-panel-label">Number</span>
           <button className="icon-btn" onClick={onClose} aria-label="Close number details">✕</button>
@@ -183,7 +202,7 @@ export default function NamePanel({ view, onClose, onOpen }) {
   }
   const nt = view.nt
   return (
-    <aside className="name-panel" aria-label="Name details">
+    <aside className="name-panel" aria-label="Name details" ref={panelRef}>
       <div className="name-panel-bar">
         {stack.length > 1 ? (
           <button className="back" onClick={() => setStack((s) => s.slice(0, -1))}>← Back</button>
