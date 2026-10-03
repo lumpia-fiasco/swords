@@ -365,6 +365,16 @@ button { cursor: pointer; }
 .attribution { margin-top: 20px; font-size: 12px; color: var(--ink-3); }
 .attribution a { color: inherit; }
 .error { color: var(--jesus); }
+.retry {
+  margin-top: 4px;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 500;
+}
+.retry:hover { background: var(--accent-ink); }
 .error.small { font-size: 13px; }
 .more {
   width: 100%;

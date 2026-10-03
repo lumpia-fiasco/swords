@@ -50,6 +50,8 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNum
   const [copied, setCopied] = useState(false)
   // The opened-from-link highlight goes away once the selection is toggled off.
   const [focusDismissed, setFocusDismissed] = useState(false)
+  // Bumped by "Try again" to re-request a chapter that failed to load.
+  const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
     let live = true
@@ -61,7 +63,7 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNum
     setNames(new Map())
     chapterNames(book, chapter).then((n) => live && setNames(n)).catch(() => {})
     return () => { live = false }
-  }, [book, chapter])
+  }, [book, chapter, attempt])
 
   // A verse (or range) opened by link or lookup starts out selected.
   useEffect(() => {
@@ -181,7 +183,8 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNum
         {state.status === 'error' && (
           <div className="error">
             <p>Couldn’t load {name} {chapter}{extra ? '' : ' from the NLT API'}.</p>
-            <p className="muted">{state.error}. Check your connection or API key, then try again.</p>
+            <p className="muted">{state.error}. This is usually temporary.</p>
+            <button className="retry" onClick={() => setAttempt((n) => n + 1)}>Try again</button>
           </div>
         )}
 

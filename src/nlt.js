@@ -6,10 +6,16 @@ const cache = new Map()
 
 async function get(path) {
   if (cache.has(path)) return cache.get(path)
-  const p = fetch(`/nlt${path}`).then((r) => {
-    if (!r.ok) throw new Error(`NLT API error ${r.status}`)
-    return r.text()
-  })
+  const p = fetch(`/nlt${path}`)
+    .then((r) => {
+      if (!r.ok) throw new Error(r.status === 502 ? 'The NLT API returned no text' : `NLT API error ${r.status}`)
+      return r.text()
+    })
+    .then((text) => {
+      // The API occasionally answers with an empty page; don't keep that as the passage.
+      if (path.startsWith('/api/passages') && !text.includes('<verse_export')) throw new Error('The NLT API returned no text')
+      return text
+    })
   cache.set(path, p)
   p.catch(() => cache.delete(path))
   return p
