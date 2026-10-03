@@ -65,6 +65,56 @@ const GREEK_MEANING = {
   Lydia: '“from Lydia”', Rhoda: '“rose”', Phoebe: '“bright, radiant”', Eutychus: '“fortunate”',
 }
 
+// Place meanings the STEPBible lexicon doesn't record (it has none for Greek place names, and
+// skips some Hebrew ones). Only well-attested etymologies; uncertain ones say so. Places whose
+// meaning is genuinely unknown (Ephesus, Corinth, Patmos…) are left out on purpose.
+const PLACE_MEANING = {
+  Jordan: '“the descender” (from yarad, “to go down”)',
+  Hebron: '“alliance, association” (from chavar, “to join”)',
+  Shiloh: 'probably “tranquility, place of rest”',
+  Sodom: 'uncertain; often explained as “burning”',
+  Gomorrah: 'uncertain; often explained as “submersion”',
+  Negeb: '“dry, parched land,” and so “the south”',
+  Nazareth: 'probably from netser, “branch, shoot” (compare Isaiah 11:1; Matthew 2:23)',
+  Capernaum: '“village of Nahum” (Nahum means “comfort”)',
+  Bethany: 'uncertain; perhaps “house of figs” or “house of the afflicted”',
+  Bethsaida: '“house of fishing” (Aramaic)',
+  Gethsemane: '“oil press” (Aramaic)',
+  Golgotha: '“the Place of the Skull” (John 19:17)',
+  'Red Sea': 'in Hebrew Yam Suph, “Sea of Reeds”',
+  'Salt Sea': '“Sea of Salt,” today the Dead Sea',
+  'Olives Mount': '“mountain of olive trees”',
+  Macedonia: 'named for the Makedones people; often explained as “highlanders”',
+  Antioch: '“city of Antiochus,” named for the Seleucid king',
+  Caesarea: '“city of Caesar,” named for Caesar Augustus',
+  Athens: '“city of Athena,” named for the Greek goddess',
+  Thessalonica: 'named for Thessalonike, “victory over Thessaly”',
+  Philippi: '“city of Philip,” named for Philip II of Macedon (Philip means “lover of horses”)',
+  Galatia: '“land of the Gauls”',
+  Laodicea: 'named for Laodice; the name means “justice of the people”',
+  Philadelphia: '“brotherly love”',
+  Smyrna: '“myrrh”',
+  Pergamum: '“citadel, height”',
+  Magadan: 'probably Magdala, “tower” (Aramaic migdal)',
+  Joppa: '“beautiful” (Hebrew Yafo)',
+  Megiddo: 'uncertain; Har-Megiddo, “mountain of Megiddo,” is Armageddon (Revelation 16:16)',
+  Engedi: '“spring of the young goat”',
+  Sharon: '“plain, level land”',
+  Arabah: '“desert plain, steppe”',
+  Shephelah: '“lowland, foothills”',
+  Susa: '“lily” (Hebrew Shushan)',
+  Debir: '“inner sanctuary”; also called Kiriath-sepher, “city of books”',
+  Haran: '“road, crossroads” (a caravan route)',
+  Bethphage: '“house of unripe figs”',
+  Emmaus: 'probably “warm springs”',
+  Bethesda: 'probably “house of mercy” (Aramaic)',
+  Akeldama: '“Field of Blood” (Acts 1:19)',
+  Gabbatha: 'Aramaic for a raised place; John calls it “the Stone Pavement” (John 19:13)',
+  Nain: 'probably “pleasant”',
+  Pamphylia: '“of every tribe”',
+  Troas: '“the Troad,” the region of ancient Troy',
+}
+
 // ---------- Lexicons ----------
 function parseLexicon(text) {
   const byD = new Map() // dStrong → entry
@@ -202,12 +252,19 @@ for (const e of entities) {
     const h = hStrong && (heb.byD.get(hStrong) ?? heb.byD.get(hStrong + 'G') ?? heb.byE.get(hStrong))
     if (h) hebrew = { orig: h.orig, translit: h.translit?.replace(/\./g, '·'), strong: hStrong, meaning: hebMeaning(hStrong, hStrong) }
   }
-  const meaning = forms.find((f) => f.meaning)?.meaning ?? hebrew?.meaning ?? GREEK_MEANING[e.name] ?? null
+  let meaning = forms.find((f) => f.meaning)?.meaning ?? hebrew?.meaning ?? GREEK_MEANING[e.name] ?? null
+  // Curated fill-ins are flagged so the panel can say they aren't from the lexicon.
+  let curated = false
+  if (!meaning && (e.kind === 'PLACE' || e.kind === 'PLACE+PERSON') && PLACE_MEANING[e.name]) {
+    meaning = PLACE_MEANING[e.name]
+    curated = true
+  }
   if (meaning) withMeaning++
 
   const entry = {
     name: e.name, kind: e.kind, type: e.type, desc: e.desc, brief: e.brief, short: e.short,
     firstRef: e.firstRef, meaning, forms, hebrew,
+    ...(curated && { curated: true }),
   }
   if (e.kind === 'PERSON') {
     for (const k of ['parents', 'siblings', 'partners', 'offspring']) {

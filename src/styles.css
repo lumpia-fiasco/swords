@@ -583,6 +583,7 @@ button { cursor: pointer; }
 .orig-meaning { flex-basis: 100%; font-size: 13.5px; color: var(--ink-2); }
 .meaning { margin: 4px 0 16px; }
 .meaning-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+.meaning-note { display: block; margin-top: 4px; font-size: 12px; color: var(--ink-3); }
 .meaning p { margin: 2px 0 0; font-family: var(--serif); font-size: 21px; line-height: 1.35; color: var(--accent-ink); text-wrap: pretty; }
 .name-desc { font-family: var(--serif); font-size: 16.5px; line-height: 1.6; margin: 0 0 8px; text-wrap: pretty; }
 .name-section { margin-top: 20px; }

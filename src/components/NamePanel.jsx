@@ -70,6 +70,7 @@ function Entry({ entry, nt, onPick, onOpen }) {
       <div className="meaning">
         <span className="meaning-label">Meaning</span>
         <p>{entry.meaning ?? 'Not recorded in the lexicon.'}</p>
+        {entry.curated && <span className="meaning-note">Added by Mantles; the STEPBible lexicon doesn’t record this meaning.</span>}
       </div>
 
       {entry.short && <p className="name-desc">{entry.short}</p>}
