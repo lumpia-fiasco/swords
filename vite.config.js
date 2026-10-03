@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
     target: 'https://api.nlt.to',
     changeOrigin: true,
     rewrite: (path) => {
-      const p = path.replace(/^\/nlt/, '')
+      const p = path.replace(/^\/nlt/, '').replace(/([?&])cv=[^&]*&?/, '$1').replace(/[?&]$/, '')
       return `${p}${p.includes('?') ? '&' : '?'}key=${encodeURIComponent(key)}`
     },
   }

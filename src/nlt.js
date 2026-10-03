@@ -3,10 +3,13 @@
 import { toOsis, parseOsis } from './ref.js'
 
 const cache = new Map()
+const CACHE_VERSION = 2
 
 async function get(path) {
   if (cache.has(path)) return cache.get(path)
-  const p = fetch(`/nlt${path}`)
+  // CACHE_VERSION is part of the URL so a bad response cached by the CDN can be retired by
+  // bumping it. The proxy strips it before calling the NLT API.
+  const p = fetch(`/nlt${path}${path.includes('?') ? '&' : '?'}cv=${CACHE_VERSION}`)
     .then((r) => {
       if (!r.ok) throw new Error(r.status === 502 ? 'The NLT API returned no text' : `NLT API error ${r.status}`)
       return r.text()

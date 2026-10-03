@@ -13,7 +13,8 @@ async function fetchUpstream(url) {
 }
 
 export default async function handler(req, res) {
-  const { path, ...query } = req.query
+  // cv is the app's cache-busting version tag; it isn't for the NLT API.
+  const { path, cv, ...query } = req.query
   const target = Array.isArray(path) ? path.join('/') : path
   if (!ALLOWED.has(target)) return res.status(404).send('Not found')
 
