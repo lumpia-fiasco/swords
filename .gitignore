@@ -8,3 +8,5 @@ dist
 data/tipnr.txt
 data/tbesh.txt
 data/tbesg.txt
+# Abarim sitemap (only used to check which name pages exist)
+data/abarim-sitemap.txt

@@ -601,6 +601,21 @@ button { cursor: pointer; }
 .num-word { font-size: 18px; color: var(--ink-3); }
 .meaning.none p { color: var(--ink-2); font-size: 18px; }
 .nm.num { text-decoration-style: dotted; }
+.abarim-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  font-weight: 500;
+  color: var(--accent-ink);
+  text-decoration: none;
+  transition: box-shadow 0.15s, translate 0.15s;
+}
+.abarim-link:hover { box-shadow: var(--shadow-2); translate: 0 -1px; }
 .strongs { margin: 18px 0 0; font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 
 @media (max-width: 1279px) {

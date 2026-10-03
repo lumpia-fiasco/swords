@@ -115,6 +115,12 @@ function Entry({ entry, nt, onPick, onOpen }) {
         </section>
       )}
 
+      {entry.abarim && (
+        <a className="abarim-link" href={`https://www.abarim-publications.com/Meaning/${entry.abarim}.html`} target="_blank" rel="noreferrer">
+          Read more on Abarim Publications <span aria-hidden="true">↗</span>
+        </a>
+      )}
+
       <p className="strongs">
         {[...(hebrewFirst ? [entry.hebrew] : []), ...forms].map((f) => f.strong).filter(Boolean).join(' · ')}
       </p>

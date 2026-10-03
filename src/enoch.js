@@ -5,6 +5,7 @@ export const ENOCH_NOTE =
 
 export const ENOCH_ENTRIES = {
   'ang:raphael': {
+    abarim: 'Raphael',
     name: 'Raphael',
     type: 'Archangel (1 Enoch)',
     meaning: '“God heals”',
@@ -13,6 +14,7 @@ export const ENOCH_ENTRIES = {
     keyRefs: ['Enoch.10.4-7', 'Enoch.20.3', 'Enoch.22.3'],
   },
   'ang:uriel': {
+    abarim: 'Uriel',
     name: 'Uriel',
     type: 'Archangel (1 Enoch)',
     meaning: '“God is my light”',

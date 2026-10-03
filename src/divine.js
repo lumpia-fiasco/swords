@@ -3,6 +3,7 @@
 
 export const DIVINE = {
   'div:yhwh': {
+    abarim: 'YHWH',
     name: 'LORD',
     type: 'Divine name',
     meaning: '“I AM” — the self-existent, covenant-keeping God',
@@ -14,6 +15,7 @@ export const DIVINE = {
     keyRefs: ['Exod.3.14-15', 'Exod.6.2-3', 'Exod.34.6-7', 'Isa.42.8'],
   },
   'div:sabaoth': {
+    abarim: 'Sabaoth',
     name: 'Lord of Heaven’s Armies',
     type: 'Divine name',
     meaning: '“LORD of Hosts” — commander of the armies of heaven',
@@ -22,6 +24,7 @@ export const DIVINE = {
     keyRefs: ['1Sam.17.45', 'Ps.24.10', 'Ps.46.7', 'Isa.6.3'],
   },
   'div:elohim': {
+    abarim: 'Elohim',
     name: 'God',
     type: 'Divine name',
     meaning: '“God, the Mighty One” — plural in form, expressing majesty and fullness',
@@ -34,6 +37,7 @@ export const DIVINE = {
     keyRefs: ['Gen.1.1', 'Deut.6.4', 'Ps.46.10', 'John.1.1'],
   },
   'div:adonai': {
+    abarim: 'Adonai',
     name: 'Lord',
     type: 'Divine title',
     meaning: '“My Lord, Master” — the One with rightful authority',
@@ -45,6 +49,7 @@ export const DIVINE = {
     keyRefs: ['Ps.8.1', 'Isa.6.1', 'Rom.10.9', 'Phil.2.11'],
   },
   'div:shaddai': {
+    abarim: 'Shaddai',
     name: 'Almighty',
     type: 'Divine name',
     meaning: '“God Almighty, the All-Sufficient One”',
@@ -56,6 +61,7 @@ export const DIVINE = {
     keyRefs: ['Gen.17.1', 'Exod.6.3', 'Ps.91.1', 'Rev.4.8'],
   },
   'div:elyon': {
+    abarim: 'Elyon',
     name: 'Most High',
     type: 'Divine name',
     meaning: '“The Most High, the Exalted One” — sovereign over all',
@@ -67,6 +73,7 @@ export const DIVINE = {
     keyRefs: ['Gen.14.18-20', 'Ps.91.1', 'Dan.4.34', 'Luke.1.35'],
   },
   'div:yeshua': {
+    abarim: 'Jesus',
     name: 'Jesus',
     type: 'Name of the Son',
     meaning: '“Yahweh saves” — “for he will save his people from their sins” (Matt 1:21)',
@@ -78,6 +85,7 @@ export const DIVINE = {
     keyRefs: ['Matt.1.21', 'Luke.1.31', 'Acts.4.12', 'Phil.2.9-11'],
   },
   'div:messiah': {
+    abarim: 'Messiah',
     name: 'Christ / Messiah',
     type: 'Title of the Son',
     meaning: '“The Anointed One” — the King anointed by God’s Spirit',
@@ -100,6 +108,7 @@ export const DIVINE = {
     keyRefs: ['Gen.1.2', 'Ps.51.11', 'Joel.2.28', 'Acts.2.4'],
   },
   'div:immanuel': {
+    abarim: 'Immanuel',
     name: 'Immanuel',
     type: 'Name of the Son',
     meaning: '“God with us” (Matt 1:23)',
@@ -111,6 +120,7 @@ export const DIVINE = {
     keyRefs: ['Isa.7.14', 'Isa.8.8', 'Matt.1.23'],
   },
   'div:abba': {
+    abarim: 'Abba',
     name: 'Abba',
     type: 'Divine address',
     meaning: '“Father” — the intimate word of a child for its father (Aramaic)',

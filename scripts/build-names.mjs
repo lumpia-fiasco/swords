@@ -191,8 +191,62 @@ function parseTipnr(text) {
   return entities
 }
 
+// ---------- Abarim Publications ----------
+// Abarim's name essays are copyrighted (no republishing), so Mantles only links to them. Their
+// public sitemap tells us which names have a page, so a link is shown only where one exists.
+async function abarimPages() {
+  const file = new URL('abarim-sitemap.txt', DATA)
+  if (!existsSync(file)) {
+    console.log('Downloading Abarim sitemap…')
+    const res = await fetch('https://www.abarim-publications.com/sitemap.txt', { headers: { 'User-Agent': 'Mantles/1.0 (https://github.com/lumpia-fiasco/swords)' } })
+    if (!res.ok) throw new Error(`Abarim sitemap: HTTP ${res.status}`)
+    writeFileSync(file, await res.text())
+  }
+  const pages = new Map()
+  for (const m of readFileSync(file, 'utf8').matchAll(/\/Meaning\/([^/\s]+)\.html/g)) pages.set(m[1].toLowerCase(), m[1])
+  return pages
+}
+const ABARIM_SKIP = new Set(['index', 'bible_names', 'sources', 'translating_bible_names'])
+// Bigram overlap (Dice coefficient) between two spellings, letters only.
+function similar(a, b) {
+  const norm = (x) => x.toLowerCase().replace(/[^a-z]/g, '')
+  const A = norm(a)
+  const B = norm(b)
+  if (A.slice(0, 3) === B.slice(0, 3)) return true
+  const grams = (x) => Array.from({ length: Math.max(0, x.length - 1) }, (_, i) => x.slice(i, i + 2))
+  const ga = grams(A)
+  const gb = grams(B)
+  const pool = [...gb]
+  let common = 0
+  for (const g of ga) {
+    const i = pool.indexOf(g)
+    if (i >= 0) { common++; pool.splice(i, 1) }
+  }
+  return (2 * common) / (ga.length + gb.length || 1) >= 0.5
+}
+
+function abarimSlug(pages, names) {
+  const primary = names[0].replace(/\s+(Mount|Valley|Brook|River|Pool|Gate|Plain|Wilderness|Desert)$/i, '')
+  for (const n of names) {
+    if (!n) continue
+    // "Olives Mount" → "Olives"; "Red Sea" → "Red_Sea"; "Abel-beth-maacah" as is.
+    const base = n.replace(/\s+(Mount|Valley|Brook|River|Pool|Gate|Plain|Wilderness|Desert)$/i, '').trim()
+    for (const v of [n, base]) {
+      for (const slug of [v.replace(/\s+/g, '_'), v.replace(/\s+/g, '-')]) {
+        const hit = pages.get(slug.toLowerCase())
+        // An alternate name only counts if it's a spelling of the same name (Engedi → En-gedi),
+        // not a different name for the same place (Babylon → Pekod).
+        if (hit && !ABARIM_SKIP.has(slug.toLowerCase()) && similar(primary, hit)) return hit
+      }
+    }
+  }
+  return null
+}
+
 // ---------- Build ----------
 const [tipnr, tbesh, tbesg] = await Promise.all(['tipnr.txt', 'tbesh.txt', 'tbesg.txt'].map(load))
+const abarim = await abarimPages()
+let withAbarim = 0
 const heb = parseLexicon(tbesh)
 const grk = parseLexicon(tbesg)
 const entities = parseTipnr(tipnr).filter((e) => !SKIP_IDS.has(e.id))
@@ -266,6 +320,11 @@ for (const e of entities) {
     firstRef: e.firstRef, meaning, forms, hebrew,
     ...(curated && { curated: true }),
   }
+  const page = abarimSlug(abarim, [e.name, e.unique.split('@')[0].split('|')[0].replace(/_/g, ' '), ...e.forms.flatMap((f) => f.english)])
+  if (page) {
+    entry.abarim = page
+    withAbarim++
+  }
   if (e.kind === 'PERSON') {
     for (const k of ['parents', 'siblings', 'partners', 'offspring']) {
       const l = linkList(e[k])
@@ -289,4 +348,4 @@ for (const [bk, chapters] of Object.entries(index)) {
   writeFileSync(new URL(`idx/${bk}.json`, OUT), JSON.stringify(out))
 }
 for (const [b, entries] of Object.entries(buckets)) writeFileSync(new URL(`ent/${b}.json`, OUT), JSON.stringify(entries))
-console.log(`${entities.length} names (${withMeaning} with meanings), ${Object.keys(index).length} books, ${Object.keys(buckets).length} entry files`)
+console.log(`${entities.length} names (${withMeaning} with meanings, ${withAbarim} with an Abarim page), ${Object.keys(index).length} books, ${Object.keys(buckets).length} entry files`)
