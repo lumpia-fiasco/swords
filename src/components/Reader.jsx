@@ -6,6 +6,7 @@ import { linkNumbers } from '../numbers.js'
 import { bookById, BOOKS } from '../books.js'
 import { containsVerse, label } from '../ref.js'
 import { ENOCH_NOTE } from '../enoch.js'
+import { VERSIONS, useVersion } from '../version.js'
 
 // Plain text of one verse's HTML pieces (footnote markers and tags removed).
 function verseText(pieces) {
@@ -39,6 +40,7 @@ function neighbor(book, chapter, dir) {
 }
 
 export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNumber }) {
+  const version = useVersion()
   const { book, chapter } = focus
   const [state, setState] = useState({ status: 'loading', blocks: [] })
   const [hasRefs, setHasRefs] = useState(new Set())
@@ -56,14 +58,14 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNum
   useEffect(() => {
     let live = true
     setState((s) => ({ ...s, status: 'loading' }))
-    getChapter(book, chapter)
+    getChapter(book, chapter, version)
       .then((blocks) => live && setState({ status: 'ready', blocks }))
       .catch((e) => live && setState({ status: 'error', blocks: [], error: e.message }))
     versesWithRefs(book, chapter).then((s) => live && setHasRefs(s))
     setNames(new Map())
     chapterNames(book, chapter).then((n) => live && setNames(n)).catch(() => {})
     return () => { live = false }
-  }, [book, chapter, attempt])
+  }, [book, chapter, attempt, version])
 
   // A verse (or range) opened by link or lookup starts out selected.
   useEffect(() => {
@@ -108,7 +110,7 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNum
     const verses = [...pieces].sort((a, b) => a[0] - b[0])
     const ref = label({ book, chapter, verse: range.from, endVerse: range.to > range.from ? range.to : undefined })
     const body = verses.length === 1 ? verseText(verses[0][1]) : verses.map(([v, p]) => `${v} ${verseText(p)}`).join(' ')
-    await writeClipboard(`${body}\n— ${ref} (${bookById[book].translation ?? 'NLT'})`)
+    await writeClipboard(`${body}\n— ${ref} (${bookById[book].translation ?? version})`)
     setCopied(true)
     setTimeout(() => setCopied(false), 1600)
   }
@@ -169,7 +171,7 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNum
     <main className="reader" ref={scrollRef}>
       <article className="page">
         <header className="chapter-head">
-          <p className="eyebrow">{extra ? 'R. H. Charles translation · 1917' : 'New Living Translation'}</p>
+          <p className="eyebrow">{extra ? 'R. H. Charles translation · 1917' : VERSIONS[version].name}</p>
           <h1>{name} <span>{chapter}</span></h1>
           <p className="hint">Tap a verse for cross-references and copying, or a name or number for its meaning.</p>
         </header>
@@ -182,7 +184,7 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNum
         )}
         {state.status === 'error' && (
           <div className="error">
-            <p>Couldn’t load {name} {chapter}{extra ? '' : ' from the NLT API'}.</p>
+            <p>Couldn’t load {name} {chapter}{extra ? '' : ` (${version})`}.</p>
             <p className="muted">{state.error}. This is usually temporary.</p>
             <button className="retry" onClick={() => setAttempt((n) => n + 1)}>Try again</button>
           </div>
@@ -229,9 +231,7 @@ export default function Reader({ focus, onSelectVerse, onNavigate, onName, onNum
             <a href="https://en.wikisource.org/wiki/The_Book_of_Enoch_(Charles)" target="_blank" rel="noreferrer">Wikisource</a>, with Charles’s critical sigla (⌈ ⌉ †) removed for readability.
           </p>
         ) : (
-        <p className="copyright">
-          Scripture quotations are taken from the Holy Bible, New Living Translation, copyright © 1996, 2004, 2015 by Tyndale House Foundation. Used by permission of Tyndale House Publishers, Carol Stream, Illinois 60188. All rights reserved.
-        </p>
+        <p className="copyright">{VERSIONS[version].copyright}</p>
         )}
       </article>
 

@@ -3,7 +3,7 @@ import { bookById } from '../books.js'
 import { parseTyped, label } from '../ref.js'
 import { matchTopics } from '../topics.js'
 
-export default function TopBar({ focus, onLookup, onOpenTopic, onToggleDrawer, onHome }) {
+export default function TopBar({ focus, onLookup, onOpenTopic, onToggleDrawer, onHome, version, onVersion }) {
   const [q, setQ] = useState('')
   const [active, setActive] = useState(-1)
   const [showSuggest, setShowSuggest] = useState(false)
@@ -39,8 +39,18 @@ export default function TopBar({ focus, onLookup, onOpenTopic, onToggleDrawer, o
           <path d="M12 13.2c1 1.1 2.1 2.1 2.1 3.6a2.1 2.1 0 0 1-4.2 0c0-1.5 1.1-2.5 2.1-3.6Z" />
         </svg>
         <span>Mantles</span>
-        <span className="tag">{book?.translation ? 'Charles' : 'NLT'}</span>
       </a>
+      {book?.translation ? (
+        <span className="tag" title="1 Enoch is shown in R. H. Charles’s translation">Charles</span>
+      ) : (
+        <div className="version-switch" role="radiogroup" aria-label="Translation">
+          {['NLT', 'KJV'].map((v) => (
+            <button key={v} role="radio" aria-checked={version === v} className={version === v ? 'on' : ''} onClick={() => onVersion(v)}>
+              {v}
+            </button>
+          ))}
+        </div>
+      )}
 
       <form
         className="search"

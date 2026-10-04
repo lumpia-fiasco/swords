@@ -144,7 +144,8 @@ function parseRefs(s) {
 const englishNames = (field) =>
   field
     .split(';')
-    .filter((p) => !/=\s*(KJV|LK|LQ)\s*$/.test(p) || !p.includes('='))
+    // KJV spellings are kept (the app can show the KJV); manuscript-variant forms are not.
+    .filter((p) => !/=\s*(LK|LQ)\s*$/.test(p) || !p.includes('='))
     .map((p) => p.split('=')[0].replace(/[/–]/g, ' ').replace(/\s+/g, ' ').trim())
     .flatMap((p) => p.split(',').map((x) => x.trim()))
     .filter((p) => p && /^[A-Z]/.test(p) && !p.startsWith('['))

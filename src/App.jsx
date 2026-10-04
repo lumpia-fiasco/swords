@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar.jsx'
 import Reader from './components/Reader.jsx'
 import NamePanel from './components/NamePanel.jsx'
 import PatternsPanel from './components/PatternsPanel.jsx'
+import { VersionContext, savedVersion } from './version.js'
 
 // With no verse in the URL, open on a chapter (no verse selected) and the topic list.
 const DEFAULT = { book: 'John', chapter: 3 }
@@ -29,6 +30,12 @@ export default function App() {
   // The topic list by default; a verse in the URL opens straight to its cross-references.
   const [panel, setPanel] = useState({ tab: focus.verse ? 'xref' : 'topics', topicId: null, query: '' })
   const [drawerOpen, setDrawerOpen] = useState(false)
+  // Translation (NLT or KJV), remembered on this device.
+  const [version, setVersionState] = useState(savedVersion)
+  const setVersion = useCallback((v) => {
+    setVersionState(v)
+    try { localStorage.setItem('version', v) } catch {}
+  }, [])
   // Desktop: the hamburger collapses the sidebar instead of opening a drawer.
   const [navCollapsed, setNavCollapsed] = useState(false)
   // Short windows show Patterns as a tray from the bottom.
@@ -107,6 +114,7 @@ export default function App() {
   )
 
   return (
+    <VersionContext.Provider value={version}>
     <div
       className={`app ${drawerOpen ? 'drawer-open' : ''} ${nameView ? 'names-open' : ''} ${navCollapsed ? 'nav-collapsed' : ''} ${trayOpen ? 'tray-open' : ''} ${resizing ? 'resizing' : ''}`}
       style={patHeight ? { '--pat-open-h': `${patHeight}px` } : undefined}
@@ -120,6 +128,8 @@ export default function App() {
           else setNavCollapsed((c) => !c)
         }}
         onHome={() => { setSelected(null); setPanel({ tab: 'topics', topicId: null, query: '' }) }}
+        version={version}
+        onVersion={setVersion}
       />
       <div className="workspace">
         <Sidebar
@@ -155,5 +165,6 @@ export default function App() {
         }}
       />
     </div>
+    </VersionContext.Provider>
   )
 }

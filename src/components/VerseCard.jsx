@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { parseOsis, label, containsVerse } from '../ref.js'
 import { getPassages } from '../nlt.js'
+import { useVersion } from '../version.js'
 
 const CONTEXT = 3
 
 export default function VerseCard({ osis, verses, onOpen, meta }) {
+  const version = useVersion()
   const ref = parseOsis(osis)
   const [ctx, setCtx] = useState(null) // null | 'loading' | [{verse, html}]
 
@@ -20,7 +22,7 @@ export default function VerseCard({ osis, verses, onOpen, meta }) {
       endVerse: (sameChapterEnd ? ref.endVerse ?? ref.verse : ref.verse) + CONTEXT,
     }
     try {
-      const map = await getPassages([around])
+      const map = await getPassages([around], version)
       setCtx([...map.values()][0] ?? [])
     } catch {
       setCtx(null)

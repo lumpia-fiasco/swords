@@ -6,17 +6,19 @@ import { bookById } from '../books.js'
 import { label, parseOsis } from '../ref.js'
 import VerseCard from './VerseCard.jsx'
 import BooksPanel from './BooksPanel.jsx'
+import { useVersion } from '../version.js'
 
 // Fetches verse text for a list of refs in one batched request.
 function usePassages(refs) {
-  const key = refs.join(';')
+  const version = useVersion()
+  const key = `${version}:${refs.join(';')}`
   const [map, setMap] = useState(new Map())
   const [error, setError] = useState(null)
   useEffect(() => {
     let live = true
     setMap(new Map())
     setError(null)
-    if (refs.length) getPassages(refs).then((m) => live && setMap(m)).catch((e) => live && setError(e.message))
+    if (refs.length) getPassages(refs, version).then((m) => live && setMap(m)).catch((e) => live && setError(e.message))
     return () => { live = false }
   }, [key])
   return { map, error }
@@ -181,6 +183,7 @@ function XrefPanel({ selected, onOpen, onTopic }) {
 const PAGE = 50
 
 function SearchPanel({ query, onOpen }) {
+  const version = useVersion()
   const [results, setResults] = useState(null)
   const [error, setError] = useState(null)
   const [shown, setShown] = useState(PAGE)
@@ -189,9 +192,9 @@ function SearchPanel({ query, onOpen }) {
     setResults(null)
     setError(null)
     setShown(PAGE)
-    search(query).then((r) => live && setResults(r)).catch((e) => live && setError(e.message))
+    search(query, version).then((r) => live && setResults(r)).catch((e) => live && setError(e.message))
     return () => { live = false }
-  }, [query])
+  }, [query, version])
 
   return (
     <div>
