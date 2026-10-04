@@ -5,7 +5,8 @@ const ALLOWED = new Set(['api/passages', 'api/search'])
 
 // The NLT API sometimes answers 200 with an empty body (e.g. when busy or rate-limiting).
 // A passage response is only real if it contains verses; never cache one that doesn't.
-const hasVerses = (body) => body.includes('<verse_export')
+// NLT wraps each verse in <verse_export>; the KJV only marks verse numbers.
+const hasVerses = (body) => body.includes('<verse_export') || body.includes('class="vn"')
 
 async function fetchUpstream(url) {
   const res = await fetch(url)
